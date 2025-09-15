@@ -17,52 +17,20 @@ const PersonalHealthRecord = () => {
     setCurrentLanguage(savedLanguage);
   }, []);
 
-  // Generate unique Worker Health ID
-  const generateWorkerId = () => {
-    const prefix = 'WH';
-    const timestamp = Date.now()?.toString()?.slice(-6);
-    const random = Math.floor(Math.random() * 1000)?.toString()?.padStart(3, '0');
-    return `${prefix}${timestamp}${random}`;
-  };
-
-  // Mock Supabase integration - simulate database storage
-  const saveToDatabase = async (formData) => {
-    // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    const workerRecord = {
-      ...formData,
-      workerId: generateWorkerId(),
-      createdAt: new Date()?.toISOString(),
-      updatedAt: new Date()?.toISOString(),
-      status: 'active'
-    };
-
-    // In real implementation, this would be:
-    // const { data, error } = await supabase
-    //   .from('worker_health_records')
-    //   .insert([workerRecord])
-    //   .select();
-
-    return workerRecord;
-  };
-
   const handleFormSubmit = async (formData) => {
     setIsSubmitting(true);
     
     try {
-      // Save to mock database
-      const savedRecord = await saveToDatabase(formData);
-      
-      setWorkerData(savedRecord);
+      // The form component now handles Supabase integration directly
+      // and passes back the saved data with healthId
+      setWorkerData(formData);
       setShowSuccess(true);
       
       // Scroll to top to show success message
       window.scrollTo({ top: 0, behavior: 'smooth' });
       
     } catch (error) {
-      console.error('Error saving health record:', error);
-      alert('Failed to create health record. Please try again.');
+      console.error('Error in form submission:', error);
     } finally {
       setIsSubmitting(false);
     }

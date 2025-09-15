@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Input from '../../../components/ui/Input';
 import Select from '../../../components/ui/Select';
 import Button from '../../../components/ui/Button';
-
+import QRCode from 'qrcode.react';
 import Icon from '../../../components/AppIcon';
+import { supabase, generateWorkerHealthId } from '../../../utils/supabase';
 
 const PersonalInfoForm = ({ onSubmit, isSubmitting }) => {
   const [formData, setFormData] = useState({
@@ -164,11 +165,82 @@ const PersonalInfoForm = ({ onSubmit, isSubmitting }) => {
     return Object.keys(newErrors)?.length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e?.preventDefault();
     
     if (validateForm()) {
-      onSubmit(formData);
+      try {
+        // Generate unique Worker Health ID
+        const healthId = generateWorkerHealthId();
+        console.log('Generated Health ID:', healthId);
+        
+        // Prepare data for Supabase
+        const workerData = {
+          full_name: formData.fullName.trim(),
+          date_of_birth: formData.dateOfBirth,
+          age: parseInt(formData.age) || 0,
+          gender: formData.gender,
+          phone_number: formData.phoneNumber.trim(),
+          address: formData.address.trim(),
+          occupation_type: formData.occupationType,
+          contractor_name: formData.contractorName?.trim() || null,
+          blood_group: formData.bloodGroup,
+          allergies: formData.allergies?.trim() || null,
+          chronic_diseases: formData.chronicDiseases.join(','),
+          vaccination_status: formData.vaccinationStatus,
+          health_id: healthId,
+          qr_code_data: healthId, // QR code will contain the health ID
+          created_at: new Date().toISOString()
+        };
+        
+        console.log('Attempting to save worker data:', workerData);
+        
+        // Insert data into Supabase
+        const { data, error } = await supabase
+          .from('workers')
+          .insert([workerData])
+          .select();
+        
+        if (error) {
+          console.error('Supabase error details:', {
+            message: error.message,
+            details: error.details,
+            hint: error.hint,
+            code: error.code
+          });
+          
+          // Provide more helpful error messages
+          let errorMessage = 'Error saving health record: ';
+          
+          if (error.code === '401' || error.message?.includes('Invalid API key')) {
+            errorMessage += 'Authentication failed. Please check Supabase configuration.';
+          } else if (error.code === '42501' || error.message?.includes('permission denied')) {
+            errorMessage += 'Permission denied. Please check RLS policies in Supabase.';
+            errorMessage += '\n\nTo fix this:\n1. Go to Supabase Dashboard\n2. Navigate to Authentication > Policies\n3. Run the SQL commands in supabase_rls_policy.sql file';
+          } else if (error.code === '23505' || error.message?.includes('duplicate')) {
+            errorMessage += 'A record with this Health ID already exists. Please try again.';
+          } else if (error.code === '42P01' || error.message?.includes('relation') || error.message?.includes('does not exist')) {
+            errorMessage += 'Table "workers" not found. Please create the table in Supabase.';
+          } else {
+            errorMessage += error.message;
+          }
+          
+          alert(errorMessage);
+          return;
+        }
+        
+        console.log('Worker data saved successfully:', data);
+        
+        // Pass the health ID and saved data to parent component
+        onSubmit({
+          ...formData,
+          healthId: healthId,
+          savedData: data?.[0] || workerData
+        });
+      } catch (error) {
+        console.error('Unexpected error in form submission:', error);
+        alert(`An unexpected error occurred: ${error.message}\n\nPlease check the console for more details.`);
+      }
     }
   };
 

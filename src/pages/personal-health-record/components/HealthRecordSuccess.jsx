@@ -10,16 +10,17 @@ const HealthRecordSuccess = ({ workerData, onCreateNew }) => {
     const canvas = qrRef?.current?.querySelector('canvas');
     const url = canvas?.toDataURL();
     const link = document.createElement('a');
-    link.download = `worker-health-qr-${workerData?.workerId}.png`;
+    link.download = `worker-health-qr-${workerData?.healthId || workerData?.workerId}.png`;
     link.href = url;
     link?.click();
   };
 
   const shareHealthRecord = async () => {
+    const healthId = workerData?.healthId || workerData?.workerId;
     const shareData = {
       title: 'WorkerHelper Health Record',
-      text: `Health Record for ${workerData?.fullName} - Worker ID: ${workerData?.workerId}`,
-      url: `${window.location?.origin}/health-record/${workerData?.workerId}`
+      text: `Health Record for ${workerData?.fullName} - Worker Health ID: ${healthId}`,
+      url: `${window.location?.origin}/health-record/${healthId}`
     };
 
     if (navigator.share) {
@@ -64,7 +65,7 @@ const HealthRecordSuccess = ({ workerData, onCreateNew }) => {
         <div className="bg-muted rounded-lg p-4 mb-4">
           <div className="text-center">
             <div className="text-2xl font-mono font-bold text-primary mb-1">
-              {workerData?.workerId}
+              {workerData?.healthId || workerData?.workerId}
             </div>
             <div className="text-sm text-muted-foreground">
               {workerData?.fullName}
@@ -103,7 +104,7 @@ const HealthRecordSuccess = ({ workerData, onCreateNew }) => {
           
           <div ref={qrRef} className="inline-block p-4 bg-white rounded-lg border border-border mb-6">
             <QRCode
-              value={`${window.location?.origin}/health-record/${workerData?.workerId}`}
+              value={workerData?.healthId || workerData?.workerId || 'NO-ID'}
               size={200}
               level="M"
               includeMargin={true}
