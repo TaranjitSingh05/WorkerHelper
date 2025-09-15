@@ -17,10 +17,11 @@ const HealthRecordSuccess = ({ workerData, onCreateNew }) => {
 
   const shareHealthRecord = async () => {
     const healthId = workerData?.healthId || workerData?.workerId;
+    const shareUrl = workerData?.qrCodeUrl || `${window.location?.origin}/worker/${healthId}`;
     const shareData = {
       title: 'WorkerHelper Health Record',
       text: `Health Record for ${workerData?.fullName} - Worker Health ID: ${healthId}`,
-      url: `${window.location?.origin}/health-record/${healthId}`
+      url: shareUrl
     };
 
     if (navigator.share) {
@@ -99,12 +100,12 @@ const HealthRecordSuccess = ({ workerData, onCreateNew }) => {
             Your Health Record QR Code
           </h3>
           <p className="text-sm text-muted-foreground mb-6">
-            Healthcare providers can scan this code to access your health information
+            Scan this code to view basic worker information (name, age, occupation, etc.)
           </p>
           
           <div ref={qrRef} className="inline-block p-4 bg-white rounded-lg border border-border mb-6">
             <QRCode
-              value={workerData?.healthId || workerData?.workerId || 'NO-ID'}
+              value={workerData?.qrCodeUrl || `${window.location.origin}/worker/${workerData?.healthId || workerData?.workerId}`}
               size={200}
               level="M"
               includeMargin={true}

@@ -9,6 +9,7 @@ import PersonalHealthRecord from './pages/personal-health-record';
 import HealthTrends from './pages/health-trends';
 import AboutUsPage from './pages/about-us';
 import Homepage from './pages/homepage';
+import WorkerDetails from './pages/worker-details';
 
 const Routes = () => {
   return (
@@ -24,6 +25,7 @@ const Routes = () => {
         <Route path="/health-trends" element={<HealthTrends />} />
         <Route path="/about-us" element={<AboutUsPage />} />
         <Route path="/homepage" element={<Homepage />} />
+        <Route path="/worker/:health_id" element={<WorkerDetails />} />
         <Route path="*" element={<NotFound />} />
       </RouterRoutes>
       </ErrorBoundary>

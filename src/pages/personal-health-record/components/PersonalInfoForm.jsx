@@ -48,20 +48,16 @@ const PersonalInfoForm = ({ onSubmit, isSubmitting }) => {
   }, [formData?.dateOfBirth]);
 
   const genderOptions = [
-    { value: 'male', label: 'Male' },
-    { value: 'female', label: 'Female' },
-    { value: 'other', label: 'Other' }
+    { value: 'Male', label: 'Male' },
+    { value: 'Female', label: 'Female' },
+    { value: 'Other', label: 'Other' }
   ];
 
   const occupationOptions = [
-    { value: 'construction', label: 'Construction Worker' },
-    { value: 'fishery', label: 'Fishery Worker' },
-    { value: 'factory', label: 'Factory Worker' },
-    { value: 'agriculture', label: 'Agricultural Worker' },
-    { value: 'domestic', label: 'Domestic Worker' },
-    { value: 'transport', label: 'Transport Worker' },
-    { value: 'retail', label: 'Retail Worker' },
-    { value: 'other', label: 'Other' }
+    { value: 'Construction', label: 'Construction' },
+    { value: 'Fishery', label: 'Fishery' },
+    { value: 'Factory', label: 'Factory' },
+    { value: 'Other', label: 'Other' }
   ];
 
   const bloodGroupOptions = [
@@ -76,22 +72,17 @@ const PersonalInfoForm = ({ onSubmit, isSubmitting }) => {
   ];
 
   const chronicDiseaseOptions = [
-    { value: 'diabetes', label: 'Diabetes' },
-    { value: 'hypertension', label: 'Hypertension' },
-    { value: 'asthma', label: 'Asthma' },
-    { value: 'heart_disease', label: 'Heart Disease' },
-    { value: 'kidney_disease', label: 'Kidney Disease' },
-    { value: 'liver_disease', label: 'Liver Disease' },
-    { value: 'tuberculosis', label: 'Tuberculosis' },
-    { value: 'arthritis', label: 'Arthritis' },
-    { value: 'none', label: 'None' }
+    { value: 'Diabetes', label: 'Diabetes' },
+    { value: 'Hypertension', label: 'Hypertension' },
+    { value: 'Asthma', label: 'Asthma' },
+    { value: 'Other', label: 'Other' },
+    { value: 'None', label: 'None' }
   ];
 
   const vaccinationOptions = [
-    { value: 'fully_vaccinated', label: 'Fully Vaccinated' },
-    { value: 'partially_vaccinated', label: 'Partially Vaccinated' },
-    { value: 'not_vaccinated', label: 'Not Vaccinated' },
-    { value: 'unknown', label: 'Unknown' }
+    { value: 'Fully Vaccinated', label: 'Fully Vaccinated' },
+    { value: 'Partially Vaccinated', label: 'Partially Vaccinated' },
+    { value: 'Not Vaccinated', label: 'Not Vaccinated' }
   ];
 
   const handleInputChange = (field, value) => {
@@ -106,10 +97,10 @@ const PersonalInfoForm = ({ onSubmit, isSubmitting }) => {
   const handleChronicDiseasesChange = (value) => {
     let updatedDiseases = [...formData?.chronicDiseases];
     
-    if (value?.includes('none')) {
-      updatedDiseases = ['none'];
+    if (value?.includes('None')) {
+      updatedDiseases = ['None'];
     } else {
-      updatedDiseases = value?.filter(disease => disease !== 'none');
+      updatedDiseases = value?.filter(disease => disease !== 'None');
     }
     
     setFormData(prev => ({ ...prev, chronicDiseases: updatedDiseases }));
@@ -174,6 +165,9 @@ const PersonalInfoForm = ({ onSubmit, isSubmitting }) => {
         const healthId = generateWorkerHealthId();
         console.log('Generated Health ID:', healthId);
         
+        // Generate QR code URL for the worker details page
+        const qrCodeUrl = `${window.location.origin}/worker/${healthId}`;
+        
         // Prepare data for Supabase
         const workerData = {
           full_name: formData.fullName.trim(),
@@ -189,15 +183,15 @@ const PersonalInfoForm = ({ onSubmit, isSubmitting }) => {
           chronic_diseases: formData.chronicDiseases.join(','),
           vaccination_status: formData.vaccinationStatus,
           health_id: healthId,
-          qr_code_data: healthId, // QR code will contain the health ID
+          qr_code_data: qrCodeUrl, // QR code will contain the full URL
           created_at: new Date().toISOString()
         };
         
         console.log('Attempting to save worker data:', workerData);
         
-        // Insert data into Supabase
+        // Insert data into Supabase workers_data table
         const { data, error } = await supabase
-          .from('workers')
+          .from('workers_data')
           .insert([workerData])
           .select();
         
@@ -220,7 +214,7 @@ const PersonalInfoForm = ({ onSubmit, isSubmitting }) => {
           } else if (error.code === '23505' || error.message?.includes('duplicate')) {
             errorMessage += 'A record with this Health ID already exists. Please try again.';
           } else if (error.code === '42P01' || error.message?.includes('relation') || error.message?.includes('does not exist')) {
-            errorMessage += 'Table "workers" not found. Please create the table in Supabase.';
+            errorMessage += 'Table "workers_data" not found. Please run the SQL script workers_data_setup.sql in Supabase.';
           } else {
             errorMessage += error.message;
           }
@@ -231,10 +225,11 @@ const PersonalInfoForm = ({ onSubmit, isSubmitting }) => {
         
         console.log('Worker data saved successfully:', data);
         
-        // Pass the health ID and saved data to parent component
+        // Pass the health ID, QR code URL, and saved data to parent component
         onSubmit({
           ...formData,
           healthId: healthId,
+          qrCodeUrl: qrCodeUrl,
           savedData: data?.[0] || workerData
         });
       } catch (error) {
@@ -345,8 +340,8 @@ const PersonalInfoForm = ({ onSubmit, isSubmitting }) => {
             />
 
             <Input
-              label="Complete Address"
-              type="text"
+              label="Address"
+              type="textarea"
               placeholder="Enter your complete address"
               value={formData?.address}
               onChange={(e) => handleInputChange('address', e?.target?.value)}
