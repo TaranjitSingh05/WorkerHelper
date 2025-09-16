@@ -1,6 +1,6 @@
 /**
  * @fileoverview Authentication component styling utilities
- * @author WorkerHelper Team
+ * @author JeevanID Team
  * @version 1.0.0
  */
 

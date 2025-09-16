@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import { useUser } from '@clerk/clerk-react';
 import { useClerkAuth } from '../../contexts/ClerkAuthContext';
@@ -20,7 +20,7 @@ const PersonalHealthRecord = () => {
 
   // Load language preference on mount
   useEffect(() => {
-    const savedLanguage = localStorage.getItem('workerhelper-language') || 'en';
+    const savedLanguage = localStorage.getItem('JeevanID-language') || 'en';
     setCurrentLanguage(savedLanguage);
   }, []);
   
@@ -78,10 +78,10 @@ const PersonalHealthRecord = () => {
   };
 
   const pageTitle = {
-    en: 'Personal Health Record - WorkerHelper',
-    hi: 'व्यक्तिगत स्वास्थ्य रिकॉर्ड - WorkerHelper',
-    bn: 'ব্যক্তিগত স্বাস্থ্য রেকর্ড - WorkerHelper',
-    pa: 'ਨਿੱਜੀ ਸਿਹਤ ਰਿਕਾਰਡ - WorkerHelper'
+    en: 'Personal Health Record - JeevanID',
+    hi: 'व्यक्तिगत स्वास्थ्य रिकॉर्ड - JeevanID',
+    bn: 'ব্যক্তিগত স্বাস্থ্য রেকর্ড - JeevanID',
+    pa: 'ਨਿੱਜੀ ਸਿਹਤ ਰਿਕਾਰਡ - JeevanID'
   };
 
   const pageDescription = {
@@ -168,7 +168,7 @@ const PersonalHealthRecord = () => {
         <footer className="bg-card border-t border-border py-8">
           <div className="container mx-auto px-4 lg:px-8">
             <div className="text-center text-sm text-muted-foreground">
-              <p>© {new Date()?.getFullYear()} WorkerHelper. All rights reserved.</p>
+              <p>© {new Date()?.getFullYear()} JeevanID. All rights reserved.</p>
               <p className="mt-2">
                 Secure health record management for migrant workers in Kerala
               </p>

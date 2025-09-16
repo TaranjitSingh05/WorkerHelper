@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+﻿import React, { useEffect } from 'react';
 import Header from '../../components/ui/Header';
 import HeroSection from './components/HeroSection';
 import MissionSection from './components/MissionSection';
@@ -12,7 +12,7 @@ import CallToActionSection from './components/CallToActionSection';
 const AboutUsPage = () => {
   useEffect(() => {
     // Set page title
-    document.title = 'About Us - WorkerHelper | Empowering Migrant Workers in Kerala';
+    document.title = 'About Us - JeevanID | Empowering Migrant Workers in Kerala';
     
     // Scroll to top on page load
     window.scrollTo(0, 0);

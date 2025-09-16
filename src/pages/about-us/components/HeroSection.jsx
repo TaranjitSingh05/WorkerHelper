@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import Image from '../../../components/AppImage';
 import Button from '../../../components/ui/Button';
 import { useNavigate } from 'react-router-dom';
@@ -18,7 +18,7 @@ const HeroSection = () => {
                 in Kerala
               </h1>
               <p className="text-xl text-gray-600 leading-relaxed">
-                WorkerHelper bridges the healthcare gap for migrant workers through digital health records, multilingual support, and accessible medical services across Kerala.
+                JeevanID bridges the healthcare gap for migrant workers through digital health records, multilingual support, and accessible medical services across Kerala.
               </p>
             </div>
             

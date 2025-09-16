@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Icon from '../../../components/AppIcon';
 import Button from '../../../components/ui/Button';
@@ -78,7 +78,7 @@ const UserGuideSection = () => {
             <Icon name="BookOpen" size={32} color="white" />
           </div>
           <h2 className="text-4xl font-bold text-gray-900 mb-4">
-            How to Use WorkerHelper
+            How to Use JeevanID
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             Simple steps to create your digital health record. No reading required - just follow the pictures!

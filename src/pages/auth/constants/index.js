@@ -1,6 +1,6 @@
 /**
  * @fileoverview Authentication constants and configuration
- * @author WorkerHelper Team
+ * @author JeevanID Team
  * @version 1.0.0
  */
 

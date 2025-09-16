@@ -1,4 +1,4 @@
--- Aggressive Clerk Compatibility Fix for WorkerHelper
+﻿-- Aggressive Clerk Compatibility Fix for JeevanID
 -- This script forcefully removes all dependencies and fixes the user_id column
 -- ⚠️ WARNING: This will drop ALL views and rules related to workers_data
 -- Run this script in Supabase SQL Editor

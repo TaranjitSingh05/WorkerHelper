@@ -10,7 +10,7 @@ const Homepage = () => {
 
   // Load saved language preference on component mount
   useEffect(() => {
-    const savedLanguage = localStorage.getItem('workerhelper-language');
+    const savedLanguage = localStorage.getItem('jeevanid-language');
     if (savedLanguage && ['en', 'hi', 'bn', 'pa']?.includes(savedLanguage)) {
       setCurrentLanguage(savedLanguage);
     }
@@ -18,7 +18,7 @@ const Homepage = () => {
 
   // Save language preference when it changes
   useEffect(() => {
-    localStorage.setItem('workerhelper-language', currentLanguage);
+    localStorage.setItem('jeevanid-language', currentLanguage);
   }, [currentLanguage]);
 
   return (

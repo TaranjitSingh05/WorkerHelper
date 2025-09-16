@@ -1,4 +1,4 @@
--- Authentication Integration Setup for WorkerHelper
+﻿-- Authentication Integration Setup for JeevanID
 -- Run this script in Supabase SQL Editor after running workers_data_setup.sql
 
 -- Step 1: Add user_id column to link workers_data with Supabase Auth users

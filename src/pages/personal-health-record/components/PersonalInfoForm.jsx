@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+﻿import React, { useState, useEffect, useRef } from 'react';
 import Input from '../../../components/ui/Input';
 import Select from '../../../components/ui/Select';
 import Button from '../../../components/ui/Button';
@@ -49,7 +49,7 @@ const PersonalInfoForm = ({ onSubmit, isSubmitting }) => {
 
   // Load language preference and existing worker data on mount
   useEffect(() => {
-    const savedLanguage = localStorage.getItem('workerhelper-language') || 'en';
+    const savedLanguage = localStorage.getItem('JeevanID-language') || 'en';
     setCurrentLanguage(savedLanguage);
     
     // If user is logged in and has worker data, pre-fill the form

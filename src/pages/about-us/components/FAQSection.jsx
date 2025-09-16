@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import Icon from '../../../components/AppIcon';
 
 const FAQSection = () => {
@@ -6,16 +6,16 @@ const FAQSection = () => {
 
   const faqs = [
     {
-      question: "How secure is my health information on WorkerHelper?",
+      question: "How secure is my health information on JeevanID?",
       answer: "Your health information is protected with bank-level encryption and stored securely in compliance with Indian data protection laws. We never share your personal data without your explicit consent, and you have full control over who can access your health records."
     },
     {
-      question: "Can I use WorkerHelper if I don't speak English?",
-      answer: "Absolutely! WorkerHelper supports four languages - English, Hindi, Bengali, and Punjabi. You can switch between languages at any time, and all features including forms, instructions, and support are available in your preferred language."
+      question: "Can I use JeevanID if I don't speak English?",
+      answer: "Absolutely! JeevanID supports four languages - English, Hindi, Bengali, and Punjabi. You can switch between languages at any time, and all features including forms, instructions, and support are available in your preferred language."
     },
     {
-      question: "Is WorkerHelper free to use?",
-      answer: "Yes, WorkerHelper is completely free for all migrant workers in Kerala. This service is supported by government partnerships and healthcare providers to ensure no worker faces financial barriers to accessing their health information."
+      question: "Is JeevanID free to use?",
+      answer: "Yes, JeevanID is completely free for all migrant workers in Kerala. This service is supported by government partnerships and healthcare providers to ensure no worker faces financial barriers to accessing their health information."
     },
     {
       question: "How do I access my health records in an emergency?",
@@ -23,15 +23,15 @@ const FAQSection = () => {
     },
     {
       question: "What if I change jobs or move to a different location in Kerala?",
-      answer: "Your WorkerHelper account and health records move with you. Simply update your occupation and location in your profile, and you'll continue to have access to all features including nearby health center locations and job-specific health risk assessments."
+      answer: "Your JeevanID account and health records move with you. Simply update your occupation and location in your profile, and you'll continue to have access to all features including nearby health center locations and job-specific health risk assessments."
     },
     {
       question: "Can my employer access my health records?",
       answer: "No, your employer cannot access your personal health records without your explicit permission. You control who can view your information. However, you can choose to share specific health clearances or vaccination status if required for work compliance."
     },
     {
-      question: "How do I find the nearest hospital using WorkerHelper?",
-      answer: "The Health Centers feature uses your phone's GPS to show nearby hospitals and clinics on an interactive map. You can get directions, view contact information, and even see which facilities have partnerships with WorkerHelper for faster service."
+      question: "How do I find the nearest hospital using JeevanID?",
+      answer: "The Health Centers feature uses your phone's GPS to show nearby hospitals and clinics on an interactive map. You can get directions, view contact information, and even see which facilities have partnerships with JeevanID for faster service."
     },
     {
       question: "What happens if I lose my phone or forget my login details?",
@@ -51,7 +51,7 @@ const FAQSection = () => {
             Frequently Asked Questions
           </h2>
           <p className="text-xl text-gray-600">
-            Common questions about WorkerHelper and digital health records
+            Common questions about JeevanID and digital health records
           </p>
         </div>
 
@@ -104,7 +104,7 @@ const FAQSection = () => {
               </div>
               <div className="flex items-center justify-center space-x-2 text-blue-600">
                 <Icon name="Mail" size={16} />
-                <span className="font-medium">support@workerhelper.kerala.gov.in</span>
+                <span className="font-medium">support@JeevanID.kerala.gov.in</span>
               </div>
             </div>
           </div>

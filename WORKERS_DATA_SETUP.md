@@ -1,7 +1,7 @@
-# Workers Data Table Setup Instructions
+﻿# Workers Data Table Setup Instructions
 
 ## Overview
-This document provides step-by-step instructions to set up the new `workers_data` table in Supabase for the WorkerHelper application.
+This document provides step-by-step instructions to set up the new `workers_data` table in Supabase for the JeevanID application.
 
 ## Prerequisites
 - Access to your Supabase project dashboard

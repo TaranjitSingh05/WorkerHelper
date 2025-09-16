@@ -1,4 +1,4 @@
-# Doctor Panel Troubleshooting Guide
+﻿# Doctor Panel Troubleshooting Guide
 
 ## 🚨 "Something went wrong" Error Fix
 
@@ -10,7 +10,7 @@ If you're seeing "Something went wrong" when searching for workers in the doctor
 
 1. **Go to your Supabase Dashboard**
    - Visit [https://supabase.com](https://supabase.com)
-   - Sign in and select your WorkerHelper project
+   - Sign in and select your JeevanID project
 
 2. **Open SQL Editor**
    - In the left sidebar, click on "SQL Editor"
@@ -25,7 +25,7 @@ If you're seeing "Something went wrong" when searching for workers in the doctor
 
 1. **Go to Clerk Dashboard**
    - Visit [https://dashboard.clerk.com](https://dashboard.clerk.com)
-   - Select your WorkerHelper application
+   - Select your JeevanID application
    - Go to "Users" section
 
 2. **Find/Create Doctor User**

@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { Helmet } from 'react-helmet';
 import Header from '../../components/ui/Header';
 import HealthChatbot from '../../components/HealthChatbot';
@@ -8,14 +8,14 @@ const HealthChatbotPage = () => {
   return (
     <>
       <Helmet>
-        <title>AI Health Assistant - WorkerHelper</title>
+        <title>AI Health Assistant - JeevanID</title>
         <meta name="description" content="Get instant medical guidance from our AI health assistant. Ask questions about symptoms, medications, first aid, and workplace health in multiple languages with voice support." />
         <meta name="keywords" content="AI health assistant, medical chatbot, health questions, symptoms checker, medical guidance, worker health" />
-        <meta property="og:title" content="AI Health Assistant - WorkerHelper" />
+        <meta property="og:title" content="AI Health Assistant - JeevanID" />
         <meta property="og:description" content="Get instant medical guidance from our AI health assistant with voice support in multiple languages." />
         <meta property="og:type" content="website" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="AI Health Assistant - WorkerHelper" />
+        <meta name="twitter:title" content="AI Health Assistant - JeevanID" />
         <meta name="twitter:description" content="Get instant medical guidance from our AI health assistant with voice support in multiple languages." />
       </Helmet>
       
@@ -146,7 +146,7 @@ const HealthChatbotPage = () => {
         <footer className="bg-card border-t border-border py-8">
           <div className="container mx-auto px-4 lg:px-8">
             <div className="text-center text-sm text-muted-foreground">
-              <p>© {new Date().getFullYear()} WorkerHelper. All rights reserved.</p>
+              <p>© {new Date().getFullYear()} JeevanID. All rights reserved.</p>
               <p className="mt-2">
                 AI-powered health assistance for worker well-being and safety
               </p>

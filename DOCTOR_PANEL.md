@@ -1,4 +1,4 @@
-# Doctor Panel - WorkerHelper
+﻿# Doctor Panel - JeevanID
 
 ## Overview
 The Doctor Panel is a dedicated interface for medical professionals to access and manage worker health records. It provides secure, role-based access to medical information and report management capabilities.

@@ -1,4 +1,4 @@
--- Clerk Compatibility Fix for WorkerHelper
+﻿-- Clerk Compatibility Fix for JeevanID
 -- This script updates the database schema to work with Clerk user IDs
 -- Run this script in Supabase SQL Editor
 

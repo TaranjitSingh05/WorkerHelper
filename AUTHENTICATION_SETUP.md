@@ -1,4 +1,4 @@
-# WorkerHelper Authentication System Setup Guide
+﻿# JeevanID Authentication System Setup Guide
 
 ## Overview
 Complete authentication system with Supabase Auth integration, supporting both email/password and Worker ID/phone number authentication methods.

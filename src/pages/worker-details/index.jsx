@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import Header from '../../components/ui/Header';
@@ -75,7 +75,7 @@ const WorkerDetails = () => {
     return (
       <>
         <Helmet>
-          <title>Loading Worker Details - WorkerHelper</title>
+          <title>Loading Worker Details - JeevanID</title>
         </Helmet>
         <div className="min-h-screen bg-background">
           <Header />
@@ -100,7 +100,7 @@ const WorkerDetails = () => {
     return (
       <>
         <Helmet>
-          <title>Worker Not Found - WorkerHelper</title>
+          <title>Worker Not Found - JeevanID</title>
           <meta name="description" content="The requested worker record could not be found." />
         </Helmet>
         <div className="min-h-screen bg-background">
@@ -151,7 +151,7 @@ const WorkerDetails = () => {
   return (
     <>
       <Helmet>
-        <title>{workerData?.full_name} - Worker Details - WorkerHelper</title>
+        <title>{workerData?.full_name} - Worker Details - JeevanID</title>
         <meta name="description" content={`View basic information for ${workerData?.full_name}, ${workerData?.occupation_type} worker.`} />
         <meta name="robots" content="noindex, nofollow" />
       </Helmet>
@@ -306,7 +306,7 @@ const WorkerDetails = () => {
         <footer className="bg-card border-t border-border py-8">
           <div className="container mx-auto px-4 lg:px-8">
             <div className="text-center text-sm text-muted-foreground">
-              <p>© {new Date().getFullYear()} WorkerHelper. All rights reserved.</p>
+              <p>© {new Date().getFullYear()} JeevanID. All rights reserved.</p>
               <p className="mt-2">
                 Secure and private worker health information system
               </p>

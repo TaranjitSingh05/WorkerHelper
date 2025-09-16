@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import Image from '../../../components/AppImage';
 import Icon from '../../../components/AppIcon';
 
@@ -10,8 +10,8 @@ const TestimonialsSection = () => {
       location: "Kochi",
       language: "Bengali",
       image: "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=300",
-      quote: "WorkerHelper আমার জীবন পরিবর্তন করেছে। এখন আমি সহজেই ডাক্তারের কাছে আমার স্বাস্থ্য রেকর্ড দেখাতে পারি।",
-      translation: "WorkerHelper has changed my life. Now I can easily show my health records to doctors.",
+      quote: "JeevanID আমার জীবন পরিবর্তন করেছে। এখন আমি সহজেই ডাক্তারের কাছে আমার স্বাস্থ্য রেকর্ড দেখাতে পারি।",
+      translation: "JeevanID has changed my life. Now I can easily show my health records to doctors.",
       rating: 5
     },
     {
@@ -55,7 +55,7 @@ const TestimonialsSection = () => {
             What Workers Say
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Real stories from migrant workers who have benefited from WorkerHelper
+            Real stories from migrant workers who have benefited from JeevanID
           </p>
         </div>
 

@@ -1,10 +1,10 @@
-# WARP.md
+﻿# WARP.md
 
 This file provides guidance to WARP (warp.dev) when working with code in this repository.
 
 ## Project Overview
 
-WorkerHelper is a React-based health management system designed for construction and industrial workers. It provides personal health records, risk assessments, health center location services, and health trend analytics with Supabase backend integration.
+JeevanID is a React-based health management system designed for construction and industrial workers. It provides personal health records, risk assessments, health center location services, and health trend analytics with Supabase backend integration.
 
 ## Development Commands
 

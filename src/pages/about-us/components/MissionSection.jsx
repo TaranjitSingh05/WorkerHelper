@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import Image from '../../../components/AppImage';
 import Icon from '../../../components/AppIcon';
 
@@ -66,7 +66,7 @@ const MissionSection = () => {
               <p className="text-sm font-medium">
                 "Every worker deserves dignified healthcare access in their own language."
               </p>
-              <div className="text-xs mt-2 opacity-90">- WorkerHelper Team</div>
+              <div className="text-xs mt-2 opacity-90">- JeevanID Team</div>
             </div>
           </div>
         </div>

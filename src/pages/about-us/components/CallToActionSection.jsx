@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import Button from '../../../components/ui/Button';
 import Icon from '../../../components/AppIcon';
 import { useNavigate } from 'react-router-dom';
@@ -41,7 +41,7 @@ const CallToActionSection = () => {
             Ready to Take Control of Your Health?
           </h2>
           <p className="text-xl text-blue-100 max-w-3xl mx-auto leading-relaxed">
-            Join thousands of migrant workers in Kerala who are already using WorkerHelper to manage their healthcare needs effectively.
+            Join thousands of migrant workers in Kerala who are already using JeevanID to manage their healthcare needs effectively.
           </p>
         </div>
 
@@ -95,7 +95,7 @@ const CallToActionSection = () => {
             
             <div className="bg-white/20 rounded-lg px-6 py-3">
               <div className="text-white font-bold text-xl">+91-800-WORKER</div>
-              <div className="text-red-100 text-sm">WorkerHelper Support</div>
+              <div className="text-red-100 text-sm">JeevanID Support</div>
             </div>
           </div>
         </div>

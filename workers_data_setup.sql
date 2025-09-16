@@ -1,4 +1,4 @@
--- Create the workers_data table for WorkerHelper application
+﻿-- Create the workers_data table for JeevanID application
 -- This script should be run in Supabase SQL Editor
 
 -- Drop existing table if it exists (uncomment if needed)

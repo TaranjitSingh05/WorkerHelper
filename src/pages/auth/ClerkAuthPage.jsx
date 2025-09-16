@@ -1,7 +1,7 @@
 /**
  * @fileoverview Clerk Authentication Page Component
  * @description Handles Clerk-based authentication with account linking
- * @author WorkerHelper Team
+ * @author JeevanID Team
  * @version 1.0.0
  */
 
@@ -181,8 +181,8 @@ const ClerkAuthPage = () => {
   return (
     <>
       <Helmet>
-        <title>Sign In / Sign Up - WorkerHelper</title>
-        <meta name="description" content="Sign in to your WorkerHelper account or create a new account to manage your health records." />
+        <title>Sign In / Sign Up - JeevanID</title>
+        <meta name="description" content="Sign in to your JeevanID account or create a new account to manage your health records." />
       </Helmet>
       
       <div className="min-h-screen bg-gradient-to-b from-background via-muted/30 to-background">
@@ -197,7 +197,7 @@ const ClerkAuthPage = () => {
                 <div className="w-16 h-16 bg-gradient-to-br from-primary to-primary/70 rounded-2xl shadow-lg shadow-primary/20 ring-1 ring-primary/20 flex items-center justify-center mx-auto mb-5">
                   <Icon name="Shield" size={32} color="white" />
                 </div>
-                <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground mb-2">Welcome to WorkerHelper</h1>
+                <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground mb-2">Welcome to JeevanID</h1>
                 <p className="text-sm md:text-base text-muted-foreground">
                   Secure access to your health records
                 </p>

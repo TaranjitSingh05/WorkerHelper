@@ -1,7 +1,7 @@
 /**
  * @fileoverview Main Authentication Page Component
  * @description Handles user authentication including sign-in, sign-up, and account linking
- * @author WorkerHelper Team
+ * @author JeevanID Team
  * @version 1.0.0
  */
 
@@ -403,8 +403,8 @@ const AuthPage = () => {
   return (
     <>
       <Helmet>
-        <title>Sign In / Sign Up - WorkerHelper</title>
-        <meta name="description" content="Sign in to your WorkerHelper account or create a new account to manage your health records." />
+        <title>Sign In / Sign Up - JeevanID</title>
+        <meta name="description" content="Sign in to your JeevanID account or create a new account to manage your health records." />
       </Helmet>
       
       <div className={LAYOUT_STYLES.PAGE_CONTAINER}>
@@ -419,7 +419,7 @@ const AuthPage = () => {
                 <div className={HEADER_STYLES.ICON_WRAPPER}>
                   <Icon name="Shield" size={32} color="white" />
                 </div>
-                <h1 className={HEADER_STYLES.TITLE}>Welcome to WorkerHelper</h1>
+                <h1 className={HEADER_STYLES.TITLE}>Welcome to JeevanID</h1>
                 <p className={HEADER_STYLES.SUBTITLE}>
                   Secure access to your health records
                 </p>

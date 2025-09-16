@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import Header from '../../components/ui/Header';
 import JobTypeSelector from './components/JobTypeSelector';
 import RiskOverviewCard from './components/RiskOverviewCard';
@@ -13,7 +13,7 @@ const PredictiveRiskAssessment = () => {
 
   useEffect(() => {
     // Check for saved language preference
-    const savedLanguage = localStorage.getItem('workerhelper_language');
+    const savedLanguage = localStorage.getItem('JeevanID_language');
     if (savedLanguage) {
       setCurrentLanguage(savedLanguage);
     }

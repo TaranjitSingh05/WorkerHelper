@@ -1,4 +1,4 @@
-// Role-based authentication utilities for WorkerHelper
+﻿// Role-based authentication utilities for JeevanID
 
 // User roles
 export const USER_ROLES = {

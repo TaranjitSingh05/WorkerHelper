@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import Image from '../../../components/AppImage';
 import Icon from '../../../components/AppIcon';
 
@@ -32,7 +32,7 @@ const PartnershipsSection = () => {
 
   const endorsements = [
     {
-      quote: "WorkerHelper has significantly improved healthcare accessibility for migrant workers across Kerala.",
+      quote: "JeevanID has significantly improved healthcare accessibility for migrant workers across Kerala.",
       author: "Dr. Priya Nair",
       position: "Director, Kerala Health Services",
       image: "https://images.pexels.com/photos/5327921/pexels-photo-5327921.jpeg?auto=compress&cs=tinysrgb&w=150"

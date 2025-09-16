@@ -1,4 +1,4 @@
--- Clerk Compatibility Fix v2 for WorkerHelper
+﻿-- Clerk Compatibility Fix v2 for JeevanID
 -- This script handles views and dependencies before altering the user_id column
 -- Run this script in Supabase SQL Editor
 

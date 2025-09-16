@@ -1,6 +1,6 @@
-# Indian Dummy Data Setup Guide
+﻿# Indian Dummy Data Setup Guide
 
-This guide helps you set up comprehensive Indian dummy data for the WorkerHelper doctor panel with realistic names, addresses, and medical reports.
+This guide helps you set up comprehensive Indian dummy data for the JeevanID doctor panel with realistic names, addresses, and medical reports.
 
 ## 🇮🇳 What's Included
 

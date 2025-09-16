@@ -1,6 +1,6 @@
 /**
  * @fileoverview Authentication form validation utilities
- * @author WorkerHelper Team
+ * @author JeevanID Team
  * @version 1.0.0
  */
 

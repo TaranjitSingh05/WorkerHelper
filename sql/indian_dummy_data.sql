@@ -1,4 +1,4 @@
--- Indian Dummy Data for WorkerHelper Doctor Panel
+﻿-- Indian Dummy Data for JeevanID Doctor Panel
 -- Run this script in your Supabase SQL editor after setting up basic tables
 
 -- 1. First, ensure tables exist with flexible schema

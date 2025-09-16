@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import Icon from '../../../components/AppIcon';
 
 const StatisticsSection = () => {
@@ -7,7 +7,7 @@ const StatisticsSection = () => {
       icon: "Users",
       number: "50,000+",
       label: "Registered Workers",
-      description: "Migrant workers using WorkerHelper across Kerala"
+      description: "Migrant workers using JeevanID across Kerala"
     },
     {
       icon: "MapPin",

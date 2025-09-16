@@ -1,4 +1,4 @@
-# Supabase Integration Setup for WorkerHelper
+﻿# Supabase Integration Setup for JeevanID
 
 ## ✅ Completed Setup
 

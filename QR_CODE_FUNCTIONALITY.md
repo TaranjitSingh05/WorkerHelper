@@ -1,4 +1,4 @@
-# QR Code Functionality - Implementation Guide
+﻿# QR Code Functionality - Implementation Guide
 
 ## Overview
 The QR code functionality has been updated to show only limited worker details when scanned, ensuring privacy while providing essential information for identification purposes.
@@ -145,8 +145,8 @@ Worker details pages include:
 - Health Record Form: `http://localhost:4028/personal-health-record`
 
 ### Production (Example)
-- Worker Details: `https://workerhelper.com/worker/WH-ABC123-XYZ789`
-- Health Record Form: `https://workerhelper.com/personal-health-record`
+- Worker Details: `https://JeevanID.com/worker/WH-ABC123-XYZ789`
+- Health Record Form: `https://JeevanID.com/personal-health-record`
 
 ## Benefits of This Implementation
 

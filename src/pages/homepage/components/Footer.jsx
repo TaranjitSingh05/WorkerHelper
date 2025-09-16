@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { Link } from 'react-router-dom';
 import Icon from '../../../components/AppIcon';
 
@@ -13,7 +13,7 @@ const Footer = ({ currentLanguage }) => {
       emergency: "Emergency Helpline",
       email: "Email Support",
       address: "Kerala Health Department\nThiruvananthapuram, Kerala 695001",
-      copyright: "All rights reserved. WorkerHelper - Kerala Health Initiative",
+      copyright: "All rights reserved. JeevanID - Kerala Health Initiative",
       links: {
         home: "Home",
         about: "About Us",
@@ -44,7 +44,7 @@ const Footer = ({ currentLanguage }) => {
       emergency: "आपातकालीन हेल्पलाइन",
       email: "ईमेल सहायता",
       address: "केरल स्वास्थ्य विभाग\nतिरुवनंतपुरम, केरल 695001",
-      copyright: "सभी अधिकार सुरक्षित। WorkerHelper - केरल स्वास्थ्य पहल",
+      copyright: "सभी अधिकार सुरक्षित। JeevanID - केरल स्वास्थ्य पहल",
       links: {
         home: "होम",
         about: "हमारे बारे में",
@@ -75,7 +75,7 @@ const Footer = ({ currentLanguage }) => {
       emergency: "জরুরি হেল্পলাইন",
       email: "ইমেইল সহায়তা",
       address: "কেরালা স্বাস্থ্য বিভাগ\nতিরুবনন্তপুরম, কেরালা ৬৯৫০০১",
-      copyright: "সকল অধিকার সংরক্ষিত। WorkerHelper - কেরালা স্বাস্থ্য উদ্যোগ",
+      copyright: "সকল অধিকার সংরক্ষিত। JeevanID - কেরালা স্বাস্থ্য উদ্যোগ",
       links: {
         home: "হোম",
         about: "আমাদের সম্পর্কে",
@@ -106,7 +106,7 @@ const Footer = ({ currentLanguage }) => {
       emergency: "ਐਮਰਜੈਂਸੀ ਹੈਲਪਲਾਈਨ",
       email: "ਈਮੇਲ ਸਹਾਇਤਾ",
       address: "ਕੇਰਲ ਸਿਹਤ ਵਿਭਾਗ\nਤਿਰੁਵਨੰਤਪੁਰਮ, ਕੇਰਲ 695001",
-      copyright: "ਸਾਰੇ ਅਧਿਕਾਰ ਸੁਰੱਖਿਅਤ। WorkerHelper - ਕੇਰਲ ਸਿਹਤ ਪਹਿਲ",
+      copyright: "ਸਾਰੇ ਅਧਿਕਾਰ ਸੁਰੱਖਿਅਤ। JeevanID - ਕੇਰਲ ਸਿਹਤ ਪਹਿਲ",
       links: {
         home: "ਘਰ",
         about: "ਸਾਡੇ ਬਾਰੇ",
@@ -143,7 +143,7 @@ const Footer = ({ currentLanguage }) => {
               <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
                 <Icon name="Heart" size={24} color="white" />
               </div>
-              <span className="text-xl font-bold text-foreground">WorkerHelper</span>
+              <span className="text-xl font-bold text-foreground">JeevanID</span>
             </div>
             <p className="text-muted-foreground text-sm mb-6 leading-relaxed">
               {currentContent?.tagline}
@@ -298,10 +298,10 @@ const Footer = ({ currentLanguage }) => {
                   </span>
                 </div>
                 <a 
-                  href="mailto:support@workerhelper.kerala.gov.in"
+                  href="mailto:support@JeevanID.kerala.gov.in"
                   className="text-sm text-primary hover:text-primary/80 transition-colors"
                 >
-                  support@workerhelper.kerala.gov.in
+                  support@JeevanID.kerala.gov.in
                 </a>
               </div>
 

@@ -91,7 +91,7 @@ const WorkerDashboard = () => {
     return (
       <>
         <Helmet>
-          <title>Link Health Record - WorkerHelper</title>
+          <title>Link Health Record - JeevanID</title>
         </Helmet>
         
         <div className="min-h-screen bg-background">
@@ -147,7 +147,7 @@ const WorkerDashboard = () => {
   return (
     <>
       <Helmet>
-        <title>{workerData.full_name} - Dashboard - WorkerHelper</title>
+        <title>{workerData.full_name} - Dashboard - JeevanID</title>
         <meta name="description" content={`Personal health dashboard for ${workerData.full_name}`} />
         <meta name="robots" content="noindex, nofollow" />
       </Helmet>

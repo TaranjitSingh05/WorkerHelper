@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { Link } from 'react-router-dom';
 import Image from '../../../components/AppImage';
 import Button from '../../../components/ui/Button';
@@ -82,10 +82,10 @@ const ArticlesSection = ({ currentLanguage }) => {
         pa: "ਮਜ਼ਦੂਰ ਤੋਂ ਸਿਹਤ ਰਾਜਦੂਤ ਤੱਕ: ਰਵੀ ਦੀ ਯਾਤਰਾ"
       },
       description: {
-        en: "How a construction worker from Bihar became a health advocate for his community using WorkerHelper\'s digital health records.",
-        hi: "कैसे बिहार का एक निर्माण मजदूर WorkerHelper के डिजिटल स्वास्थ्य रिकॉर्ड का उपयोग करके अपने समुदाय के लिए स्वास्थ्य अधिवक्ता बन गया।",
-        bn: "কীভাবে বিহারের একজন নির্माণ শ্রমিক WorkerHelper-এর ডিজিটাল স্বাস্থ্য রেকর্ড ব্যবহার করে তার সম্প্রদায়ের জন্য স্বাস্থ্য অ্যাডভোকেট হয়ে উঠেছেন।",
-        pa: "ਕਿਵੇਂ ਬਿਹਾਰ ਦਾ ਇੱਕ ਉਸਾਰੀ ਮਜ਼ਦੂਰ WorkerHelper ਦੇ ਡਿਜੀਟਲ ਸਿਹਤ ਰਿਕਾਰਡ ਦੀ ਵਰਤੋਂ ਕਰਕੇ ਆਪਣੇ ਭਾਈਚਾਰੇ ਲਈ ਸਿਹਤ ਐਡਵੋਕੇਟ ਬਣ ਗਿਆ।"
+        en: "How a construction worker from Bihar became a health advocate for his community using JeevanID\'s digital health records.",
+        hi: "कैसे बिहार का एक निर्माण मजदूर JeevanID के डिजिटल स्वास्थ्य रिकॉर्ड का उपयोग करके अपने समुदाय के लिए स्वास्थ्य अधिवक्ता बन गया।",
+        bn: "কীভাবে বিহারের একজন নির্माণ শ্রমিক JeevanID-এর ডিজিটাল স্বাস্থ্য রেকর্ড ব্যবহার করে তার সম্প্রদায়ের জন্য স্বাস্থ্য অ্যাডভোকেট হয়ে উঠেছেন।",
+        pa: "ਕਿਵੇਂ ਬਿਹਾਰ ਦਾ ਇੱਕ ਉਸਾਰੀ ਮਜ਼ਦੂਰ JeevanID ਦੇ ਡਿਜੀਟਲ ਸਿਹਤ ਰਿਕਾਰਡ ਦੀ ਵਰਤੋਂ ਕਰਕੇ ਆਪਣੇ ਭਾਈਚਾਰੇ ਲਈ ਸਿਹਤ ਐਡਵੋਕੇਟ ਬਣ ਗਿਆ।"
       },
       image: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
       readTime: "8 min read",

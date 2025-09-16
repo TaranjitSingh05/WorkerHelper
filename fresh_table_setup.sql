@@ -1,4 +1,4 @@
--- Fresh WorkerHelper Table Setup
+﻿-- Fresh JeevanID Table Setup
 -- Clean slate setup with proper Clerk compatibility
 -- Run this script in Supabase SQL Editor
 

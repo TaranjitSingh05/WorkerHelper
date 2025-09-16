@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import Icon from '../../../components/AppIcon';
 
 const HealthRecordHeader = () => {
@@ -6,7 +6,7 @@ const HealthRecordHeader = () => {
 
   // Load language preference on mount
   useEffect(() => {
-    const savedLanguage = localStorage.getItem('workerhelper-language') || 'en';
+    const savedLanguage = localStorage.getItem('JeevanID-language') || 'en';
     setCurrentLanguage(savedLanguage);
   }, []);
 

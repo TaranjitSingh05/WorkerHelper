@@ -1,4 +1,4 @@
-# OTP-Based Authentication System Setup Guide
+﻿# OTP-Based Authentication System Setup Guide
 
 ## Overview
 Complete OTP-based authentication system replacing email confirmation links with 6-digit verification codes for both signup and signin processes.
@@ -64,7 +64,7 @@ Complete OTP-based authentication system replacing email confirmation links with
 
 ### Email Template Example:
 ```html
-<h2>Your WorkerHelper Verification Code</h2>
+<h2>Your JeevanID Verification Code</h2>
 <p>Your verification code is:</p>
 <h1 style="font-size: 32px; color: #2563eb; letter-spacing: 4px;">{{ .Token }}</h1>
 <p>This code expires in 5 minutes.</p>

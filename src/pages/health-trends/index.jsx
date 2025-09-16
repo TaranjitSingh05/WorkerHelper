@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import Header from '../../components/ui/Header';
 
@@ -106,7 +106,7 @@ const HealthTrends = () => {
 
   // Load language preference from localStorage
   useEffect(() => {
-    const savedLanguage = localStorage.getItem('workerhelper-language') || 'en';
+    const savedLanguage = localStorage.getItem('JeevanID-language') || 'en';
     setCurrentLanguage(savedLanguage);
   }, []);
 
@@ -162,10 +162,10 @@ const HealthTrends = () => {
 
   const getPageTitle = () => {
     const titles = {
-      en: 'Health Trends - WorkerHelper',
-      hi: 'स्वास्थ्य रुझान - WorkerHelper',
-      bn: 'স্বাস্থ্য প্রবণতা - WorkerHelper',
-      pa: 'ਸਿਹਤ ਰੁਝਾਨ - WorkerHelper'
+      en: 'Health Trends - JeevanID',
+      hi: 'स्वास्थ्य रुझान - JeevanID',
+      bn: 'স্বাস্থ্য প্রবণতা - JeevanID',
+      pa: 'ਸਿਹਤ ਰੁਝਾਨ - JeevanID'
     };
     return titles?.[currentLanguage] || titles?.en;
   };

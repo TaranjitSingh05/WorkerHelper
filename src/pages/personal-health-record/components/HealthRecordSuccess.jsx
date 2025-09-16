@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+﻿import React, { useRef } from 'react';
 import QRCode from 'qrcode.react';
 import Button from '../../../components/ui/Button';
 import Icon from '../../../components/AppIcon';
@@ -19,7 +19,7 @@ const HealthRecordSuccess = ({ workerData, onCreateNew }) => {
     const healthId = workerData?.healthId || workerData?.workerId;
     const shareUrl = workerData?.qrCodeUrl || `${window.location?.origin}/worker/${healthId}`;
     const shareData = {
-      title: 'WorkerHelper Health Record',
+      title: 'JeevanID Health Record',
       text: `Health Record for ${workerData?.fullName} - Worker Health ID: ${healthId}`,
       url: shareUrl
     };

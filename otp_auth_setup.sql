@@ -1,4 +1,4 @@
--- OTP Authentication Setup for WorkerHelper
+﻿-- OTP Authentication Setup for JeevanID
 -- Run this script in Supabase SQL Editor after running auth_integration_setup.sql
 
 -- Step 1: Ensure workers_data table has all required fields

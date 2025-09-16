@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+﻿import React, { useState, useRef } from 'react';
 import { Helmet } from 'react-helmet';
 import { useUser } from '@clerk/clerk-react';
 import { useNavigate } from 'react-router-dom';
@@ -203,7 +203,7 @@ const DoctorDashboard = () => {
   return (
     <>
       <Helmet>
-        <title>Doctor Dashboard - WorkerHelper</title>
+        <title>Doctor Dashboard - JeevanID</title>
         <meta name="description" content="Medical professional dashboard for managing worker health records and reports." />
         <meta name="robots" content="noindex, nofollow" />
       </Helmet>

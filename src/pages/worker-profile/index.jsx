@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useUser } from '@clerk/clerk-react';
@@ -287,7 +287,7 @@ const WorkerProfile = () => {
   return (
     <>
       <Helmet>
-        <title>Worker Profile - {getWorkerName(worker)} - WorkerHelper</title>
+        <title>Worker Profile - {getWorkerName(worker)} - JeevanID</title>
         <meta name="description" content={`Medical profile for worker ${getWorkerName(worker)} (${workerId})`} />
         <meta name="robots" content="noindex, nofollow" />
       </Helmet>

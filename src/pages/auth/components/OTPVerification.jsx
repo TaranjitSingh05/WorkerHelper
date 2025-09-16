@@ -1,7 +1,7 @@
 /**
  * @fileoverview OTP Verification Component
  * @description Handles OTP verification for email authentication
- * @author WorkerHelper Team
+ * @author JeevanID Team
  * @version 1.0.0
  */
 

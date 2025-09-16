@@ -1,16 +1,16 @@
-# WorkerHelper - Code Conquerors Submission
+﻿# JeevanID - Code Conquerors Submission
 
 ## 🏆 Code Conquerors Team Submission
 
 **Team**: Code Conquerors  
-**Project**: WorkerHelper - Digital Health Record System for Migrant Workers  
+**Project**: JeevanID - Digital Health Record System for Migrant Workers  
 **Repository**: https://github.com/Codesprint25/Code-Conquerors.git
 
 ---
 
 ## 🎯 Project Overview
 
-WorkerHelper is a comprehensive digital health record management system specifically designed for migrant workers in Kerala, India. The platform bridges the gap between workers and healthcare providers through technology, ensuring seamless access to medical records and health services.
+JeevanID is a comprehensive digital health record management system specifically designed for migrant workers in Kerala, India. The platform bridges the gap between workers and healthcare providers through technology, ensuring seamless access to medical records and health services.
 
 ## ✨ Key Features
 

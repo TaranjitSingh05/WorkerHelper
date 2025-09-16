@@ -1,4 +1,4 @@
--- Final Bulletproof Indian Dummy Data for WorkerHelper
+﻿-- Final Bulletproof Indian Dummy Data for JeevanID
 -- Handles NOT NULL constraints and any table structure
 
 -- 1. First, show your table structure so you know what we're working with
@@ -303,7 +303,7 @@ LIMIT 6;
 
 METHOD 1 - FROM CLERK DASHBOARD:
 1. Go to https://dashboard.clerk.com
-2. Select your WorkerHelper application
+2. Select your JeevanID application
 3. Click on "Users" in the sidebar
 4. Find your doctor user and click on them
 5. Copy the "User ID" (looks like: user_2a3b4c5dE6f7G8h9I0j1K2l3M4)

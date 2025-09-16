@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import Header from '../../components/ui/Header';
 import LocationPermissionModal from './components/LocationPermissionModal';
@@ -123,7 +123,7 @@ const HealthCentersLocator = () => {
 
   // Load language preference on component mount
   useEffect(() => {
-    const savedLanguage = localStorage.getItem('workerhelper_language') || 'en';
+    const savedLanguage = localStorage.getItem('JeevanID_language') || 'en';
     setCurrentLanguage(savedLanguage);
   }, []);
 
@@ -262,7 +262,7 @@ const HealthCentersLocator = () => {
   return (
     <>
       <Helmet>
-        <title>Health Centers Locator - WorkerHelper</title>
+        <title>Health Centers Locator - JeevanID</title>
         <meta name="description" content="Find nearby hospitals and healthcare facilities with interactive mapping and location-based services for migrant workers in Kerala." />
         <meta name="keywords" content="health centers, hospitals, clinics, healthcare, Kerala, migrant workers, location, map" />
       </Helmet>

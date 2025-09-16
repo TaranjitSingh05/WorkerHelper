@@ -121,7 +121,7 @@ const Header = () => {
             <Icon name="Heart" size={20} color="white" />
           </div>
           <span className="text-xl font-semibold text-foreground">
-            WorkerHelper
+            JeevanID
           </span>
         </Link>
 

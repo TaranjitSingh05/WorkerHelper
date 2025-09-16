@@ -1,4 +1,4 @@
--- Ultra-Robust Indian Dummy Data for WorkerHelper
+﻿-- Ultra-Robust Indian Dummy Data for JeevanID
 -- This script adapts to ANY table structure automatically
 
 -- 1. First, let's see what your table structure actually looks like
