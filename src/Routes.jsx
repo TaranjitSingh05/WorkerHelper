@@ -4,6 +4,7 @@ import ScrollToTop from "components/ScrollToTop";
 import ErrorBoundary from "components/ErrorBoundary";
 import ProtectedRoute from "components/ProtectedRoute";
 import DoctorProtectedRoute from "components/DoctorProtectedRoute/index";
+import RoleBasedRedirect from "components/RoleBasedRedirect";
 import NotFound from "pages/NotFound";
 import PredictiveRiskAssessment from './pages/predictive-risk-assessment';
 import HealthCentersLocator from './pages/health-centers-locator';
@@ -31,11 +32,11 @@ const Routes = () => {
         <Route path="/auth" element={<ClerkAuthPage />} />
         <Route path="/worker/:health_id" element={<WorkerDetails />} />
         
-        {/* Protected Routes - Require Authentication */}
-        <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-        <Route path="/personal-health-record" element={<ProtectedRoute><PersonalHealthRecord /></ProtectedRoute>} />
-        <Route path="/predictive-risk-assessment" element={<ProtectedRoute><PredictiveRiskAssessment /></ProtectedRoute>} />
-        <Route path="/health-centers-locator" element={<ProtectedRoute><HealthCentersLocator /></ProtectedRoute>} />
+        {/* Protected Routes - Require Authentication (Workers Only) */}
+        <Route path="/dashboard" element={<RoleBasedRedirect redirectDoctors={true}><ProtectedRoute><Dashboard /></ProtectedRoute></RoleBasedRedirect>} />
+        <Route path="/personal-health-record" element={<RoleBasedRedirect redirectDoctors={true}><ProtectedRoute><PersonalHealthRecord /></ProtectedRoute></RoleBasedRedirect>} />
+        <Route path="/predictive-risk-assessment" element={<RoleBasedRedirect redirectDoctors={true}><ProtectedRoute><PredictiveRiskAssessment /></ProtectedRoute></RoleBasedRedirect>} />
+        <Route path="/health-centers-locator" element={<RoleBasedRedirect redirectDoctors={true}><ProtectedRoute><HealthCentersLocator /></ProtectedRoute></RoleBasedRedirect>} />
         
         {/* Doctor Protected Routes - Require Doctor Role */}
         <Route path="/doctor/dashboard" element={<DoctorProtectedRoute><DoctorDashboard /></DoctorProtectedRoute>} />

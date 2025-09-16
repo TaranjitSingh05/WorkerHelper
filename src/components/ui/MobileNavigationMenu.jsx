@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { SignOutButton } from '@clerk/clerk-react';
+import { isDoctor, getUserDisplayName } from '../../utils/roles';
 import Icon from '../AppIcon';
 import Button from './Button';
 import UserAvatar from './UserAvatar';
@@ -61,11 +62,16 @@ const MobileNavigationMenu = ({
                 />
                 <div className="flex-1 min-w-0">
                   <p className="font-medium text-foreground truncate">
-                    {workerData?.full_name || user?.firstName || user?.emailAddresses?.[0]?.emailAddress?.split('@')[0]}
+                    {getUserDisplayName(user)}
                   </p>
-                  {workerData && (
+                  {workerData && !isDoctor(user) && (
                     <p className="text-xs text-muted-foreground font-mono">
                       {workerData.health_id}
+                    </p>
+                  )}
+                  {isDoctor(user) && (
+                    <p className="text-xs text-muted-foreground">
+                      Medical Professional
                     </p>
                   )}
                   {user?.emailAddresses?.[0]?.emailAddress && (

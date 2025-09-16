@@ -20,13 +20,13 @@ const Header = () => {
   const { user, isSignedIn } = useUser();
   const { workerData } = useClerkAuth();
 
-  // Define different navigation items based on authentication status
+  // Define different navigation items based on user role
   const publicNavigationItems = [
     { label: 'Home', path: '/homepage', icon: 'Home' },
     { label: 'About Us', path: '/about-us', icon: 'Info' }
   ];
 
-  const authenticatedNavigationItems = [
+  const workerNavigationItems = [
     { label: 'Home', path: '/homepage', icon: 'Home' },
     { label: 'About Us', path: '/about-us', icon: 'Info' },
     { label: 'Risk Assessment', path: '/predictive-risk-assessment', icon: 'Shield' },
@@ -34,7 +34,20 @@ const Header = () => {
     { label: 'Personal Info', path: '/personal-health-record', icon: 'User' }
   ];
 
-  const navigationItems = isSignedIn ? authenticatedNavigationItems : publicNavigationItems;
+  const doctorNavigationItems = [
+    { label: 'Home', path: '/homepage', icon: 'Home' },
+    { label: 'About Us', path: '/about-us', icon: 'Info' },
+    { label: 'Find Workers', path: '/doctor/dashboard', icon: 'Search' },
+  ];
+
+  // Get navigation items based on user role
+  const getNavigationItems = () => {
+    if (!isSignedIn) return publicNavigationItems;
+    if (isDoctor(user)) return doctorNavigationItems;
+    return workerNavigationItems;
+  };
+
+  const navigationItems = getNavigationItems();
 
   const isActiveRoute = (path) => {
     return location?.pathname === path;
