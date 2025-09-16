@@ -33,8 +33,20 @@ const DoctorDashboard = () => {
         .eq('doctor_clerk_id', user.id)
         .single();
 
-      if (error && error.code !== 'PGRST116') {
-        console.error('Error loading dashboard stats:', error);
+      if (error) {
+        console.error('Dashboard stats error:', error);
+        
+        // Always set default stats if there's any error
+        setDashboardStats({
+          total_reports: 0,
+          unique_workers: 0,
+          reports_today: 0,
+          reports_this_week: 0
+        });
+        
+        if (error.code === '42P01') {
+          console.warn('doctor_dashboard_stats view not found - using default values');
+        }
         return;
       }
 
@@ -46,6 +58,13 @@ const DoctorDashboard = () => {
       });
     } catch (error) {
       console.error('Error loading dashboard stats:', error);
+      // Set default stats on any error
+      setDashboardStats({
+        total_reports: 0,
+        unique_workers: 0,
+        reports_today: 0,
+        reports_this_week: 0
+      });
     }
   };
 
@@ -67,13 +86,19 @@ const DoctorDashboard = () => {
         .limit(5);
 
       if (error) {
-        console.error('Error loading recent reports:', error);
+        console.error('Recent reports error:', error);
+        setRecentReports([]);
+        
+        if (error.code === '42P01') {
+          console.warn('medical_reports table not found - showing empty reports');
+        }
         return;
       }
 
       setRecentReports(data || []);
     } catch (error) {
       console.error('Error loading recent reports:', error);
+      setRecentReports([]);
     }
   };
 
@@ -100,30 +125,41 @@ const DoctorDashboard = () => {
         .single();
 
       if (workerError) {
+        console.error('Worker search error:', workerError);
+        
         if (workerError.code === 'PGRST116') {
-          alert(`No worker found with Health ID: ${workerSearchId.trim()}`);
+          alert(`No worker found with Health ID: ${workerSearchId.trim()}`);  
+        } else if (workerError.code === '42P01') {
+          alert('Database table not found. Please ensure the workers_data table has been created in your database.');
         } else {
-          console.error('Error searching for worker:', workerError);
-          alert('Error searching for worker. Please try again.');
+          alert(`Database error: ${workerError.message || 'Unknown error occurred while searching for worker'}`);
         }
         return;
       }
 
-      // Get worker's medical reports
-      const { data: reports, error: reportsError } = await supabase
-        .from('medical_reports')
-        .select('*')
-        .eq('worker_health_id', workerSearchId.trim())
-        .order('report_date', { ascending: false });
+      // Get worker's medical reports (optional, continue even if this fails)
+      let reports = [];
+      try {
+        const { data: reportsData, error: reportsError } = await supabase
+          .from('medical_reports')
+          .select('*')
+          .eq('worker_health_id', workerSearchId.trim())
+          .order('report_date', { ascending: false });
 
-      if (reportsError) {
-        console.error('Error loading worker reports:', reportsError);
-        // Continue even if reports fail to load
+        if (reportsError) {
+          console.error('Error loading worker reports:', reportsError);
+          // Don't show error to user, just log it
+        } else {
+          reports = reportsData || [];
+        }
+      } catch (reportError) {
+        console.error('Medical reports table error:', reportError);
+        // Continue without reports
       }
 
       setSearchResults({
         worker: workerData,
-        reports: reports || []
+        reports: reports
       });
 
       // Navigate to worker profile
@@ -131,7 +167,7 @@ const DoctorDashboard = () => {
 
     } catch (error) {
       console.error('Error in worker search:', error);
-      alert('An error occurred while searching. Please try again.');
+      alert(`Unexpected error: ${error.message}. Please check the browser console for more details.`);
     } finally {
       setIsSearching(false);
     }
