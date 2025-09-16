@@ -57,26 +57,48 @@ const WorkerProfile = () => {
 
   const loadWorkerData = async () => {
     try {
+      console.log('Loading worker data for ID:', workerId);
+      
       const { data, error } = await supabase
         .from('workers_data')
         .select('*')
         .eq('health_id', workerId)
         .single();
 
+      console.log('Worker data response:', { data, error });
+
       if (error) {
+        console.error('Worker search error details:', {
+          code: error.code,
+          message: error.message,
+          details: error.details,
+          hint: error.hint
+        });
+        
         if (error.code === 'PGRST116') {
           alert(`No worker found with Health ID: ${workerId}`);
           navigate('/doctor/dashboard');
+        } else if (error.code === '42P01') {
+          alert('Database table not found. Please ensure the workers_data table has been created.');
+          navigate('/doctor/dashboard');
         } else {
           console.error('Error loading worker data:', error);
-          alert('Error loading worker data. Please try again.');
+          alert(`Database error: ${error.message}. Please check the console for details.`);
         }
         return;
       }
 
+      if (!data) {
+        alert(`No data returned for worker with Health ID: ${workerId}`);
+        navigate('/doctor/dashboard');
+        return;
+      }
+
+      console.log('Worker data loaded successfully:', data);
       setWorker(data);
     } catch (error) {
-      console.error('Error loading worker data:', error);
+      console.error('Unexpected error loading worker data:', error);
+      alert(`Unexpected error: ${error.message}. Please check the console for details.`);
     }
   };
 
@@ -204,10 +226,26 @@ const WorkerProfile = () => {
 
   const calculateAge = (birthDate) => {
     if (!birthDate) return 'N/A';
-    const today = new Date();
-    const birth = new Date(birthDate);
-    const age = Math.floor((today - birth) / (365.25 * 24 * 60 * 60 * 1000));
-    return age;
+    try {
+      const today = new Date();
+      const birth = new Date(birthDate);
+      const age = Math.floor((today - birth) / (365.25 * 24 * 60 * 60 * 1000));
+      return age;
+    } catch (error) {
+      return 'N/A';
+    }
+  };
+
+  // Helper function to get worker name from different possible column names
+  const getWorkerName = (workerData) => {
+    if (!workerData) return 'Unknown Worker';
+    return workerData.name || workerData.full_name || workerData.worker_name || `Worker ${workerData.health_id}` || 'Unknown Worker';
+  };
+
+  // Helper function to safely get field value
+  const getFieldValue = (workerData, fieldName, defaultValue = 'N/A') => {
+    if (!workerData) return defaultValue;
+    return workerData[fieldName] || defaultValue;
   };
 
   if (loading && !worker) {
@@ -249,8 +287,8 @@ const WorkerProfile = () => {
   return (
     <>
       <Helmet>
-        <title>Worker Profile - {worker.name} - WorkerHelper</title>
-        <meta name="description" content={`Medical profile for worker ${worker.name} (${workerId})`} />
+        <title>Worker Profile - {getWorkerName(worker)} - WorkerHelper</title>
+        <meta name="description" content={`Medical profile for worker ${getWorkerName(worker)} (${workerId})`} />
         <meta name="robots" content="noindex, nofollow" />
       </Helmet>
 
@@ -281,20 +319,22 @@ const WorkerProfile = () => {
                       <Icon name="User" size={40} className="text-white" />
                     </div>
                     <div>
-                      <h1 className="text-3xl font-bold mb-2">{worker.name}</h1>
+                      <h1 className="text-3xl font-bold mb-2">{getWorkerName(worker)}</h1>
                       <div className="space-y-1">
                         <p className="text-white/90 flex items-center space-x-2">
                           <Icon name="BadgeCheck" size={16} />
-                          <span>Health ID: {worker.health_id}</span>
+                          <span>Health ID: {getFieldValue(worker, 'health_id', workerId)}</span>
                         </p>
                         <p className="text-white/90 flex items-center space-x-2">
                           <Icon name="Calendar" size={16} />
-                          <span>Age: {calculateAge(worker.birth_date)} years</span>
+                          <span>Age: {calculateAge(getFieldValue(worker, 'birth_date', null))} years</span>
                         </p>
-                        <p className="text-white/90 flex items-center space-x-2">
-                          <Icon name="Phone" size={16} />
-                          <span>{worker.phone}</span>
-                        </p>
+                        {getFieldValue(worker, 'phone', null) && (
+                          <p className="text-white/90 flex items-center space-x-2">
+                            <Icon name="Phone" size={16} />
+                            <span>{getFieldValue(worker, 'phone')}</span>
+                          </p>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -326,42 +366,67 @@ const WorkerProfile = () => {
                   <div className="space-y-4">
                     <div>
                       <label className="text-sm font-medium text-muted-foreground">Full Name</label>
-                      <p className="text-foreground font-medium">{worker.name}</p>
+                      <p className="text-foreground font-medium">{getWorkerName(worker)}</p>
                     </div>
                     
                     <div>
-                      <label className="text-sm font-medium text-muted-foreground">Date of Birth</label>
-                      <p className="text-foreground">{worker.birth_date ? new Date(worker.birth_date).toLocaleDateString() : 'N/A'}</p>
+                      <label className="text-sm font-medium text-muted-foreground">Health ID</label>
+                      <p className="text-foreground font-mono">{getFieldValue(worker, 'health_id', workerId)}</p>
                     </div>
                     
-                    <div>
-                      <label className="text-sm font-medium text-muted-foreground">Gender</label>
-                      <p className="text-foreground">{worker.gender || 'N/A'}</p>
-                    </div>
+                    {getFieldValue(worker, 'birth_date', null) && (
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">Date of Birth</label>
+                        <p className="text-foreground">{new Date(getFieldValue(worker, 'birth_date')).toLocaleDateString()}</p>
+                      </div>
+                    )}
                     
-                    <div>
-                      <label className="text-sm font-medium text-muted-foreground">Phone</label>
-                      <p className="text-foreground">{worker.phone}</p>
-                    </div>
+                    {getFieldValue(worker, 'gender', null) && (
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">Gender</label>
+                        <p className="text-foreground">{getFieldValue(worker, 'gender')}</p>
+                      </div>
+                    )}
                     
-                    <div>
-                      <label className="text-sm font-medium text-muted-foreground">Address</label>
-                      <p className="text-foreground">{worker.address || 'N/A'}</p>
-                    </div>
+                    {getFieldValue(worker, 'phone', null) && (
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">Phone</label>
+                        <p className="text-foreground">{getFieldValue(worker, 'phone')}</p>
+                      </div>
+                    )}
                     
-                    <div>
-                      <label className="text-sm font-medium text-muted-foreground">Emergency Contact</label>
-                      <p className="text-foreground">{worker.emergency_contact || 'N/A'}</p>
-                    </div>
+                    {getFieldValue(worker, 'address', null) && (
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">Address</label>
+                        <p className="text-foreground">{getFieldValue(worker, 'address')}</p>
+                      </div>
+                    )}
                     
-                    <div>
-                      <label className="text-sm font-medium text-muted-foreground">Blood Type</label>
-                      <p className="text-foreground">{worker.blood_type || 'N/A'}</p>
-                    </div>
+                    {getFieldValue(worker, 'emergency_contact', null) && (
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">Emergency Contact</label>
+                        <p className="text-foreground">{getFieldValue(worker, 'emergency_contact')}</p>
+                      </div>
+                    )}
+                    
+                    {getFieldValue(worker, 'blood_type', null) && (
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">Blood Type</label>
+                        <p className="text-foreground">{getFieldValue(worker, 'blood_type')}</p>
+                      </div>
+                    )}
                     
                     <div>
                       <label className="text-sm font-medium text-muted-foreground">Known Allergies</label>
-                      <p className="text-foreground">{worker.allergies || 'None reported'}</p>
+                      <p className="text-foreground">{getFieldValue(worker, 'allergies', 'None reported')}</p>
+                    </div>
+                    
+                    {/* Show available fields for debugging */}
+                    <div className="mt-4 p-3 bg-muted/50 rounded-lg">
+                      <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Available Data Fields</label>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {worker ? Object.keys(worker).filter(key => worker[key] !== null && worker[key] !== undefined && worker[key] !== '').join(', ') : 'No data'}
+                      </p>
                     </div>
                   </div>
                 </div>
