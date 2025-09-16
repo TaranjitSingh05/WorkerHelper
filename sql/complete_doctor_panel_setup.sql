@@ -1,21 +1,67 @@
 -- Complete Doctor Panel Database Setup
 -- Run this script in your Supabase SQL editor
 
--- 1. Create workers_data table if it doesn't exist
-CREATE TABLE IF NOT EXISTS workers_data (
-    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-    health_id TEXT UNIQUE NOT NULL,
-    name TEXT NOT NULL,
-    phone TEXT NOT NULL,
-    birth_date DATE,
-    gender TEXT,
-    address TEXT,
-    emergency_contact TEXT,
-    blood_type TEXT,
-    allergies TEXT,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-);
+-- 1. First, let's check the existing workers_data table structure
+-- If the table exists, we'll add missing columns instead of creating new
+
+-- Check what columns exist in workers_data table
+DO $$
+BEGIN
+    -- Check if workers_data table exists
+    IF EXISTS (SELECT FROM information_schema.tables WHERE table_name = 'workers_data') THEN
+        
+        -- Add missing columns if they don't exist
+        IF NOT EXISTS (SELECT FROM information_schema.columns WHERE table_name = 'workers_data' AND column_name = 'full_name') THEN
+            ALTER TABLE workers_data ADD COLUMN full_name TEXT;
+        END IF;
+        
+        IF NOT EXISTS (SELECT FROM information_schema.columns WHERE table_name = 'workers_data' AND column_name = 'name') THEN
+            ALTER TABLE workers_data ADD COLUMN name TEXT;
+        END IF;
+        
+        IF NOT EXISTS (SELECT FROM information_schema.columns WHERE table_name = 'workers_data' AND column_name = 'birth_date') THEN
+            ALTER TABLE workers_data ADD COLUMN birth_date DATE;
+        END IF;
+        
+        IF NOT EXISTS (SELECT FROM information_schema.columns WHERE table_name = 'workers_data' AND column_name = 'gender') THEN
+            ALTER TABLE workers_data ADD COLUMN gender TEXT;
+        END IF;
+        
+        IF NOT EXISTS (SELECT FROM information_schema.columns WHERE table_name = 'workers_data' AND column_name = 'address') THEN
+            ALTER TABLE workers_data ADD COLUMN address TEXT;
+        END IF;
+        
+        IF NOT EXISTS (SELECT FROM information_schema.columns WHERE table_name = 'workers_data' AND column_name = 'emergency_contact') THEN
+            ALTER TABLE workers_data ADD COLUMN emergency_contact TEXT;
+        END IF;
+        
+        IF NOT EXISTS (SELECT FROM information_schema.columns WHERE table_name = 'workers_data' AND column_name = 'blood_type') THEN
+            ALTER TABLE workers_data ADD COLUMN blood_type TEXT;
+        END IF;
+        
+        IF NOT EXISTS (SELECT FROM information_schema.columns WHERE table_name = 'workers_data' AND column_name = 'allergies') THEN
+            ALTER TABLE workers_data ADD COLUMN allergies TEXT;
+        END IF;
+        
+    ELSE
+        -- Create the table if it doesn't exist
+        CREATE TABLE workers_data (
+            id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+            health_id TEXT UNIQUE NOT NULL,
+            full_name TEXT,
+            name TEXT,
+            phone TEXT NOT NULL,
+            birth_date DATE,
+            gender TEXT,
+            address TEXT,
+            emergency_contact TEXT,
+            blood_type TEXT,
+            allergies TEXT,
+            created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+        );
+    END IF;
+END $$;
 
 -- 2. Create medical_reports table if it doesn't exist
 CREATE TABLE IF NOT EXISTS medical_reports (
@@ -57,13 +103,39 @@ FROM medical_reports
 GROUP BY doctor_clerk_id;
 
 -- 5. Insert sample worker data for testing
-INSERT INTO workers_data (health_id, name, phone, birth_date, gender, address, emergency_contact, blood_type, allergies) VALUES 
-('WH-12345-67890', 'John Smith', '+1-555-0101', '1985-06-15', 'Male', '123 Main St, Anytown, USA', '+1-555-0102', 'O+', 'None'),
-('WH-98765-43210', 'Maria Garcia', '+1-555-0103', '1992-03-22', 'Female', '456 Oak Ave, Somewhere, USA', '+1-555-0104', 'A+', 'Penicillin'),
-('WH-11111-22222', 'David Johnson', '+1-555-0105', '1988-11-08', 'Male', '789 Pine Rd, Elsewhere, USA', '+1-555-0106', 'B+', 'Shellfish'),
-('WH-33333-44444', 'Sarah Wilson', '+1-555-0107', '1995-09-12', 'Female', '321 Elm St, Nowhere, USA', '+1-555-0108', 'AB-', 'None'),
-('WH-55555-66666', 'Michael Brown', '+1-555-0109', '1982-01-30', 'Male', '654 Maple Dr, Anywhere, USA', '+1-555-0110', 'O-', 'Latex')
-ON CONFLICT (health_id) DO NOTHING;
+-- Handle both 'name' and 'full_name' columns depending on table structure
+DO $$
+BEGIN
+    -- Check if 'name' column exists, if not use 'full_name'
+    IF EXISTS (SELECT FROM information_schema.columns WHERE table_name = 'workers_data' AND column_name = 'name') THEN
+        -- Insert using 'name' column
+        INSERT INTO workers_data (health_id, name, phone, birth_date, gender, address, emergency_contact, blood_type, allergies) VALUES 
+        ('WH-12345-67890', 'John Smith', '+1-555-0101', '1985-06-15', 'Male', '123 Main St, Anytown, USA', '+1-555-0102', 'O+', 'None'),
+        ('WH-98765-43210', 'Maria Garcia', '+1-555-0103', '1992-03-22', 'Female', '456 Oak Ave, Somewhere, USA', '+1-555-0104', 'A+', 'Penicillin'),
+        ('WH-11111-22222', 'David Johnson', '+1-555-0105', '1988-11-08', 'Male', '789 Pine Rd, Elsewhere, USA', '+1-555-0106', 'B+', 'Shellfish'),
+        ('WH-33333-44444', 'Sarah Wilson', '+1-555-0107', '1995-09-12', 'Female', '321 Elm St, Nowhere, USA', '+1-555-0108', 'AB-', 'None'),
+        ('WH-55555-66666', 'Michael Brown', '+1-555-0109', '1982-01-30', 'Male', '654 Maple Dr, Anywhere, USA', '+1-555-0110', 'O-', 'Latex')
+        ON CONFLICT (health_id) DO NOTHING;
+    ELSIF EXISTS (SELECT FROM information_schema.columns WHERE table_name = 'workers_data' AND column_name = 'full_name') THEN
+        -- Insert using 'full_name' column
+        INSERT INTO workers_data (health_id, full_name, phone, birth_date, gender, address, emergency_contact, blood_type, allergies) VALUES 
+        ('WH-12345-67890', 'John Smith', '+1-555-0101', '1985-06-15', 'Male', '123 Main St, Anytown, USA', '+1-555-0102', 'O+', 'None'),
+        ('WH-98765-43210', 'Maria Garcia', '+1-555-0103', '1992-03-22', 'Female', '456 Oak Ave, Somewhere, USA', '+1-555-0104', 'A+', 'Penicillin'),
+        ('WH-11111-22222', 'David Johnson', '+1-555-0105', '1988-11-08', 'Male', '789 Pine Rd, Elsewhere, USA', '+1-555-0106', 'B+', 'Shellfish'),
+        ('WH-33333-44444', 'Sarah Wilson', '+1-555-0107', '1995-09-12', 'Female', '321 Elm St, Nowhere, USA', '+1-555-0108', 'AB-', 'None'),
+        ('WH-55555-66666', 'Michael Brown', '+1-555-0109', '1982-01-30', 'Male', '654 Maple Dr, Anywhere, USA', '+1-555-0110', 'O-', 'Latex')
+        ON CONFLICT (health_id) DO NOTHING;
+    ELSE
+        -- Fallback: Insert without name column
+        INSERT INTO workers_data (health_id, phone, birth_date, gender, address, emergency_contact, blood_type, allergies) VALUES 
+        ('WH-12345-67890', '+1-555-0101', '1985-06-15', 'Male', '123 Main St, Anytown, USA', '+1-555-0102', 'O+', 'None'),
+        ('WH-98765-43210', '+1-555-0103', '1992-03-22', 'Female', '456 Oak Ave, Somewhere, USA', '+1-555-0104', 'A+', 'Penicillin'),
+        ('WH-11111-22222', '+1-555-0105', '1988-11-08', 'Male', '789 Pine Rd, Elsewhere, USA', '+1-555-0106', 'B+', 'Shellfish'),
+        ('WH-33333-44444', '+1-555-0107', '1995-09-12', 'Female', '321 Elm St, Nowhere, USA', '+1-555-0108', 'AB-', 'None'),
+        ('WH-55555-66666', '+1-555-0109', '1982-01-30', 'Male', '654 Maple Dr, Anywhere, USA', '+1-555-0110', 'O-', 'Latex')
+        ON CONFLICT (health_id) DO NOTHING;
+    END IF;
+END $$;
 
 -- 6. Insert sample medical reports (replace 'YOUR_DOCTOR_CLERK_ID' with actual doctor Clerk ID)
 -- Note: You'll need to replace this with the actual Clerk user ID of a doctor user
