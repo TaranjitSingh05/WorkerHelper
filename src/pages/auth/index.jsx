@@ -1,171 +1,291 @@
-import React, { useState, useEffect } from 'react';
+/**
+ * @fileoverview Main Authentication Page Component
+ * @description Handles user authentication including sign-in, sign-up, and account linking
+ * @author WorkerHelper Team
+ * @version 1.0.0
+ */
+
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
+
+// Context and Hooks
 import { useAuth } from '../../contexts/AuthContext';
+
+// UI Components
 import Header from '../../components/ui/Header';
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
 import Icon from '../../components/AppIcon';
 import OTPVerification from './components/OTPVerification';
 
+// Constants and Utilities
+import {
+  AUTH_TABS,
+  LOGIN_METHODS,
+  FORM_STEPS,
+  OTP_TYPES,
+  ROUTES,
+  ERROR_MESSAGES,
+  SUCCESS_MESSAGES
+} from './constants';
+import {
+  LAYOUT_STYLES,
+  HEADER_STYLES,
+  CARD_STYLES,
+  TAB_STYLES,
+  FORM_STYLES,
+  MESSAGE_STYLES,
+  getTabClasses
+} from './styles';
+import {
+  validateSignInForm,
+  validateSignUpForm,
+  validateLinkAccountForm,
+  hasValidationErrors
+} from './utils/validation';
+
+// ============================================================================
+// INITIAL FORM STATES
+// ============================================================================
+
+/** Initial state for sign-in form */
+const INITIAL_SIGNIN_FORM = {
+  email: '',
+  workerId: '',
+  phoneNumber: ''
+};
+
+/** Initial state for sign-up form */
+const INITIAL_SIGNUP_FORM = {
+  email: '',
+  password: '',
+  confirmPassword: '',
+  fullName: '',
+  phoneNumber: ''
+};
+
+/** Initial state for link account form */
+const INITIAL_LINK_FORM = {
+  workerId: '',
+  phoneNumber: ''
+};
+
+// ============================================================================
+// MAIN COMPONENT
+// ============================================================================
+
+/**
+ * AuthPage Component
+ * 
+ * A comprehensive authentication page that supports:
+ * - Email-based sign-in with OTP verification
+ * - Worker ID + Phone number authentication
+ * - New user registration with email verification
+ * - Account linking for existing worker records
+ * 
+ * @component
+ * @example
+ * return (
+ *   <Route path="/auth" element={<AuthPage />} />
+ * )
+ */
 const AuthPage = () => {
+  // ============================================================================
+  // HOOKS AND NAVIGATION
+  // ============================================================================
+
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { signUpWithOTP, signIn, signInWithOTP, signInWithWorkerCredentials, linkWorkerAccount, user, loading } = useAuth();
+  const {
+    signUpWithOTP,
+    signIn,
+    signInWithOTP,
+    signInWithWorkerCredentials,
+    linkWorkerAccount,
+    user,
+    loading
+  } = useAuth();
+
+  // ============================================================================
+  // STATE MANAGEMENT
+  // ============================================================================
+
+  /** Current active tab (signin/signup) */
+  const [activeTab, setActiveTab] = useState(AUTH_TABS.SIGNIN);
   
-  const [activeTab, setActiveTab] = useState('signin'); // 'signin' or 'signup'
-  const [loginMethod, setLoginMethod] = useState('email'); // 'email' or 'worker'
-  const [currentStep, setCurrentStep] = useState('form'); // 'form' or 'otp'
+  /** Current login method (email/worker) */
+  const [loginMethod, setLoginMethod] = useState(LOGIN_METHODS.EMAIL);
+  
+  /** Current form step (form/otp) */
+  const [currentStep, setCurrentStep] = useState(FORM_STEPS.FORM);
+  
+  /** Form submission state */
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  /** Validation errors */
   const [errors, setErrors] = useState({});
+  
+  /** Success/info messages */
   const [message, setMessage] = useState('');
+  
+  /** Show account linking section */
   const [showLinkAccount, setShowLinkAccount] = useState(false);
+  
+  /** Email for OTP verification */
   const [otpEmail, setOtpEmail] = useState('');
-  const [otpType, setOtpType] = useState('signup');
+  
+  /** Type of OTP verification */
+  const [otpType, setOtpType] = useState(OTP_TYPES.SIGNUP);
 
-  // Form states
-  const [signInForm, setSignInForm] = useState({
-    email: '',
-    workerId: '',
-    phoneNumber: ''
-  });
+  // ============================================================================
+  // FORM STATES
+  // ============================================================================
 
-  const [signUpForm, setSignUpForm] = useState({
-    email: '',
-    password: '',
-    confirmPassword: '',
-    fullName: '',
-    phoneNumber: ''
-  });
+  /** Sign-in form data */
+  const [signInForm, setSignInForm] = useState(INITIAL_SIGNIN_FORM);
 
-  const [linkForm, setLinkForm] = useState({
-    workerId: '',
-    phoneNumber: ''
-  });
+  /** Sign-up form data */
+  const [signUpForm, setSignUpForm] = useState(INITIAL_SIGNUP_FORM);
 
-  // Check if user is already authenticated
+  /** Link account form data */
+  const [linkForm, setLinkForm] = useState(INITIAL_LINK_FORM);
+
+  // ============================================================================
+  // EFFECTS
+  // ============================================================================
+
+  /**
+   * Redirect authenticated users to dashboard
+   */
   useEffect(() => {
     if (user && !loading) {
-      const redirect = searchParams.get('redirect') || '/dashboard';
+      const redirect = searchParams.get('redirect') || ROUTES.DASHBOARD;
       navigate(redirect);
     }
   }, [user, loading, navigate, searchParams]);
 
-  // Set initial tab from URL params
+  /**
+   * Set initial tab from URL parameters
+   */
   useEffect(() => {
     const tab = searchParams.get('tab');
-    if (tab === 'signup' || tab === 'signin') {
+    if (tab === AUTH_TABS.SIGNUP || tab === AUTH_TABS.SIGNIN) {
       setActiveTab(tab);
     }
   }, [searchParams]);
 
-  const clearErrors = () => {
+  // ============================================================================
+  // UTILITY FUNCTIONS
+  // ============================================================================
+
+  /**
+   * Clears all error messages and success messages
+   */
+  const clearMessages = useCallback(() => {
     setErrors({});
     setMessage('');
-  };
+  }, []);
 
-  const handleTabChange = (tab) => {
+  /**
+   * Handles authentication error messages
+   * @param {Error|Object} error - The error object
+   * @returns {string} Formatted error message
+   */
+  const getErrorMessage = useCallback((error) => {
+    if (error.message?.includes('User not found')) {
+      return ERROR_MESSAGES.USER_NOT_FOUND;
+    }
+    if (error.message?.includes('User already registered')) {
+      return ERROR_MESSAGES.ACCOUNT_EXISTS;
+    }
+    return error.message || ERROR_MESSAGES.UNEXPECTED_ERROR;
+  }, []);
+
+  // ============================================================================
+  // EVENT HANDLERS
+  // ============================================================================
+
+  /**
+   * Handles tab switching between signin and signup
+   * @param {string} tab - The tab to switch to
+   */
+  const handleTabChange = useCallback((tab) => {
     setActiveTab(tab);
-    setCurrentStep('form');
-    clearErrors();
+    setCurrentStep(FORM_STEPS.FORM);
+    clearMessages();
+    
     // Update URL without page refresh
     const newParams = new URLSearchParams(searchParams);
     newParams.set('tab', tab);
     navigate(`/auth?${newParams.toString()}`, { replace: true });
-  };
+  }, [searchParams, navigate, clearMessages]);
 
-  const handleBackToForm = () => {
-    setCurrentStep('form');
+  /**
+   * Handles returning from OTP verification to form
+   */
+  const handleBackToForm = useCallback(() => {
+    setCurrentStep(FORM_STEPS.FORM);
     setOtpEmail('');
-    clearErrors();
-  };
+    clearMessages();
+  }, [clearMessages]);
 
-  const validateSignInForm = () => {
-    const newErrors = {};
+  /**
+   * Validates the sign-in form based on current login method
+   * @returns {boolean} True if form is valid, false otherwise
+   */
+  const validateSignIn = useCallback(() => {
+    const validationErrors = validateSignInForm(signInForm, loginMethod);
+    setErrors(validationErrors);
+    return !hasValidationErrors(validationErrors);
+  }, [signInForm, loginMethod]);
 
-    if (loginMethod === 'email') {
-      if (!signInForm.email.trim()) {
-        newErrors.email = 'Email is required';
-      } else if (!/\S+@\S+\.\S+/.test(signInForm.email)) {
-        newErrors.email = 'Please enter a valid email';
-      }
-    } else {
-      if (!signInForm.workerId.trim()) {
-        newErrors.workerId = 'Worker ID is required';
-      }
+  /**
+   * Validates the sign-up form
+   * @returns {boolean} True if form is valid, false otherwise
+   */
+  const validateSignUp = useCallback(() => {
+    const validationErrors = validateSignUpForm(signUpForm);
+    setErrors(validationErrors);
+    return !hasValidationErrors(validationErrors);
+  }, [signUpForm]);
 
-      if (!signInForm.phoneNumber.trim()) {
-        newErrors.phoneNumber = 'Phone number is required';
-      } else if (!/^\d{10}$/.test(signInForm.phoneNumber.replace(/\D/g, ''))) {
-        newErrors.phoneNumber = 'Please enter a valid 10-digit phone number';
-      }
-    }
+  /**
+   * Validates the link account form
+   * @returns {boolean} True if form is valid, false otherwise
+   */
+  const validateLinkAccount = useCallback(() => {
+    const validationErrors = validateLinkAccountForm(linkForm);
+    setErrors(validationErrors);
+    return !hasValidationErrors(validationErrors);
+  }, [linkForm]);
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const validateSignUpForm = () => {
-    const newErrors = {};
-
-    if (!signUpForm.email.trim()) {
-      newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(signUpForm.email)) {
-      newErrors.email = 'Please enter a valid email';
-    }
-
-    if (!signUpForm.password) {
-      newErrors.password = 'Password is required';
-    } else if (signUpForm.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
-    }
-
-    if (!signUpForm.confirmPassword) {
-      newErrors.confirmPassword = 'Please confirm your password';
-    } else if (signUpForm.password !== signUpForm.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
-    }
-
-    if (!signUpForm.fullName.trim()) {
-      newErrors.fullName = 'Full name is required';
-    }
-
-    if (!signUpForm.phoneNumber.trim()) {
-      newErrors.phoneNumber = 'Phone number is required';
-    } else if (!/^\d{10}$/.test(signUpForm.phoneNumber.replace(/\D/g, ''))) {
-      newErrors.phoneNumber = 'Please enter a valid 10-digit phone number';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSignIn = async (e) => {
+  /**
+   * Handles sign-in form submission
+   * @param {Event} e - Form submit event
+   */
+  const handleSignIn = useCallback(async (e) => {
     e.preventDefault();
     
-    if (!validateSignInForm()) return;
+    if (!validateSignIn()) return;
     
     setIsSubmitting(true);
-    clearErrors();
+    clearMessages();
 
     try {
-      if (loginMethod === 'email') {
+      if (loginMethod === LOGIN_METHODS.EMAIL) {
         // Send OTP to email for signin
         const { data, error } = await signInWithOTP(signInForm.email);
         
         if (error) {
-          if (error.message.includes('User not found')) {
-            setErrors({ general: 'No account found with this email address' });
-          } else {
-            setErrors({ general: error.message });
-          }
+          setErrors({ general: getErrorMessage(error) });
           return;
         }
 
         // Show OTP verification screen
         setOtpEmail(signInForm.email);
-        setOtpType('email');
-        setCurrentStep('otp');
+        setOtpType(OTP_TYPES.EMAIL);
+        setCurrentStep(FORM_STEPS.OTP);
         
       } else {
         // Worker ID + Phone signin
@@ -175,32 +295,36 @@ const AuthPage = () => {
         );
         
         if (error) {
-          setErrors({ general: error.message });
+          setErrors({ general: getErrorMessage(error) });
           return;
         }
 
         if (data?.email) {
           // OTP sent to worker's email
           setOtpEmail(data.email);
-          setOtpType('email');
-          setCurrentStep('otp');
+          setOtpType(OTP_TYPES.EMAIL);
+          setCurrentStep(FORM_STEPS.OTP);
           setMessage(`Verification code sent to ${data.email}`);
         }
       }
     } catch (error) {
-      setErrors({ general: error.message || 'An unexpected error occurred' });
+      setErrors({ general: getErrorMessage(error) });
     } finally {
       setIsSubmitting(false);
     }
-  };
+  }, [signInForm, loginMethod, validateSignIn, clearMessages, getErrorMessage, signInWithOTP, signInWithWorkerCredentials]);
 
-  const handleSignUp = async (e) => {
+  /**
+   * Handles sign-up form submission
+   * @param {Event} e - Form submit event
+   */
+  const handleSignUp = useCallback(async (e) => {
     e.preventDefault();
     
-    if (!validateSignUpForm()) return;
+    if (!validateSignUp()) return;
     
     setIsSubmitting(true);
-    clearErrors();
+    clearMessages();
 
     try {
       const { data, error } = await signUpWithOTP(
@@ -211,33 +335,32 @@ const AuthPage = () => {
       );
 
       if (error) {
-        if (error.message.includes('User already registered')) {
-          setErrors({ general: 'An account with this email already exists' });
-        } else {
-          setErrors({ general: error.message });
-        }
+        setErrors({ general: getErrorMessage(error) });
         return;
       }
 
       if (data?.user) {
         // Show OTP verification screen
         setOtpEmail(signUpForm.email);
-        setOtpType('signup');
-        setCurrentStep('otp');
-        setMessage('Verification code sent to your email');
+        setOtpType(OTP_TYPES.SIGNUP);
+        setCurrentStep(FORM_STEPS.OTP);
+        setMessage(SUCCESS_MESSAGES.CODE_SENT);
       }
     } catch (error) {
-      setErrors({ general: error.message || 'An unexpected error occurred' });
+      setErrors({ general: getErrorMessage(error) });
     } finally {
       setIsSubmitting(false);
     }
-  };
+  }, [signUpForm, validateSignUp, clearMessages, getErrorMessage, signUpWithOTP]);
 
-  const handleLinkAccount = async () => {
-    if (!linkForm.workerId || !linkForm.phoneNumber) return;
+  /**
+   * Handles worker account linking
+   */
+  const handleLinkAccount = useCallback(async () => {
+    if (!validateLinkAccount()) return;
     
     setIsSubmitting(true);
-    clearErrors();
+    clearMessages();
 
     try {
       const { success, error } = await linkWorkerAccount(
@@ -246,26 +369,36 @@ const AuthPage = () => {
       );
 
       if (error) {
-        setErrors({ general: error.message });
+        setErrors({ general: getErrorMessage(error) });
       } else if (success) {
-        setMessage('Worker account linked successfully! You can now access your dashboard.');
+        setMessage(SUCCESS_MESSAGES.ACCOUNT_LINKED);
         setShowLinkAccount(false);
-        navigate('/dashboard');
+        navigate(ROUTES.DASHBOARD);
       }
     } catch (error) {
-      setErrors({ general: error.message || 'Failed to link account' });
+      setErrors({ general: getErrorMessage(error) });
     } finally {
       setIsSubmitting(false);
     }
-  };
+  }, [linkForm, validateLinkAccount, clearMessages, getErrorMessage, linkWorkerAccount, navigate]);
+
+  // ============================================================================
+  // LOADING STATE
+  // ============================================================================
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <Icon name="Loader" size={32} className="text-primary animate-spin" />
+      <div className={LAYOUT_STYLES.PAGE_CONTAINER}>
+        <div className="flex items-center justify-center min-h-screen">
+          <Icon name="Loader" size={32} className="text-primary animate-spin" />
+        </div>
       </div>
     );
   }
+
+  // ============================================================================
+  // RENDER
+  // ============================================================================
 
   return (
     <>
@@ -274,58 +407,50 @@ const AuthPage = () => {
         <meta name="description" content="Sign in to your WorkerHelper account or create a new account to manage your health records." />
       </Helmet>
       
-      <div className="min-h-screen bg-background">
+      <div className={LAYOUT_STYLES.PAGE_CONTAINER}>
         <Header />
         
-        <main className="pt-20 pb-16">
-          <div className="container mx-auto px-4 lg:px-8">
-            <div className="max-w-md mx-auto">
+        <main className={LAYOUT_STYLES.MAIN_CONTENT}>
+          <div className={LAYOUT_STYLES.CONTENT_WRAPPER}>
+            <div className={LAYOUT_STYLES.FORM_CONTAINER}>
               
               {/* Page Header */}
-              <div className="text-center mb-8">
-                <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className={HEADER_STYLES.CONTAINER}>
+                <div className={HEADER_STYLES.ICON_WRAPPER}>
                   <Icon name="Shield" size={32} color="white" />
                 </div>
-                <h1 className="text-3xl font-bold text-foreground mb-2">Welcome to WorkerHelper</h1>
-                <p className="text-muted-foreground">
+                <h1 className={HEADER_STYLES.TITLE}>Welcome to WorkerHelper</h1>
+                <p className={HEADER_STYLES.SUBTITLE}>
                   Secure access to your health records
                 </p>
               </div>
 
               {/* Auth Card */}
-              <div className="bg-card rounded-xl border border-border p-6">
+              <div className={CARD_STYLES.MAIN_CARD}>
                 
-                {currentStep === 'otp' ? (
+                {currentStep === FORM_STEPS.OTP ? (
                   <OTPVerification 
                     email={otpEmail}
                     type={otpType}
                     onBack={handleBackToForm}
                     onSuccess={() => {
-                      const redirect = searchParams.get('redirect') || '/dashboard';
+                      const redirect = searchParams.get('redirect') || ROUTES.DASHBOARD;
                       navigate(redirect);
                     }}
                   />
                 ) : (
                   <>
                     {/* Tabs */}
-                    <div className="flex bg-muted rounded-lg p-1 mb-6">
+                    <div className={TAB_STYLES.CONTAINER}>
                       <button
-                        onClick={() => handleTabChange('signin')}
-                        className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
-                          activeTab === 'signin' 
-                            ? 'bg-background text-foreground shadow-sm' 
-                            : 'text-muted-foreground hover:text-foreground'
-                        }`}
+                        onClick={() => handleTabChange(AUTH_TABS.SIGNIN)}
+                        className={getTabClasses(activeTab === AUTH_TABS.SIGNIN)}
                       >
                         Sign In
                       </button>
                       <button
-                        onClick={() => handleTabChange('signup')}
-                        className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
-                          activeTab === 'signup' 
-                            ? 'bg-background text-foreground shadow-sm' 
-                            : 'text-muted-foreground hover:text-foreground'
-                        }`}
+                        onClick={() => handleTabChange(AUTH_TABS.SIGNUP)}
+                        className={getTabClasses(activeTab === AUTH_TABS.SIGNUP)}
                       >
                         Sign Up
                       </button>
@@ -333,42 +458,42 @@ const AuthPage = () => {
 
                 {/* Messages */}
                 {message && (
-                  <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                    <p className="text-sm text-blue-800">{message}</p>
+                  <div className={MESSAGE_STYLES.SUCCESS}>
+                    <p className={MESSAGE_STYLES.SUCCESS_TEXT}>{message}</p>
                   </div>
                 )}
 
                 {errors.general && (
-                  <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-                    <p className="text-sm text-red-800">{errors.general}</p>
+                  <div className={MESSAGE_STYLES.ERROR}>
+                    <p className={MESSAGE_STYLES.ERROR_TEXT}>{errors.general}</p>
                   </div>
                 )}
 
                 {/* Sign In Form */}
-                {activeTab === 'signin' && (
-                  <form onSubmit={handleSignIn} className="space-y-4">
+                {activeTab === AUTH_TABS.SIGNIN && (
+                  <form onSubmit={handleSignIn} className={FORM_STYLES.CONTAINER}>
                     
                     {/* Login Method Toggle */}
-                    <div className="space-y-3">
+                    <div className={FORM_STYLES.RADIO_GROUP}>
                       <label className="text-sm font-medium text-foreground">Login Method</label>
-                      <div className="flex space-x-4">
-                        <label className="flex items-center">
+                      <div className={FORM_STYLES.RADIO_WRAPPER}>
+                        <label className={FORM_STYLES.RADIO_OPTION}>
                           <input
                             type="radio"
                             name="loginMethod"
-                            value="email"
-                            checked={loginMethod === 'email'}
+                            value={LOGIN_METHODS.EMAIL}
+                            checked={loginMethod === LOGIN_METHODS.EMAIL}
                             onChange={(e) => setLoginMethod(e.target.value)}
                             className="mr-2"
                           />
                           <span className="text-sm">Email & Password</span>
                         </label>
-                        <label className="flex items-center">
+                        <label className={FORM_STYLES.RADIO_OPTION}>
                           <input
                             type="radio"
                             name="loginMethod"
-                            value="worker"
-                            checked={loginMethod === 'worker'}
+                            value={LOGIN_METHODS.WORKER}
+                            checked={loginMethod === LOGIN_METHODS.WORKER}
                             onChange={(e) => setLoginMethod(e.target.value)}
                             className="mr-2"
                           />
@@ -378,7 +503,7 @@ const AuthPage = () => {
                     </div>
 
                     {/* Email Field */}
-                    {loginMethod === 'email' && (
+                    {loginMethod === LOGIN_METHODS.EMAIL && (
                       <Input
                         label="Email"
                         type="email"
@@ -392,7 +517,7 @@ const AuthPage = () => {
                     )}
 
                     {/* Worker ID/Phone Fields */}
-                    {loginMethod === 'worker' && (
+                    {loginMethod === LOGIN_METHODS.WORKER && (
                       <>
                         <Input
                           label="Worker ID"
@@ -422,19 +547,19 @@ const AuthPage = () => {
                       size="lg"
                       loading={isSubmitting}
                       fullWidth
-                      iconName={loginMethod === 'email' ? 'Mail' : 'LogIn'}
+                      iconName={loginMethod === LOGIN_METHODS.EMAIL ? 'Mail' : 'LogIn'}
                       iconPosition="left"
                     >
                       {isSubmitting 
-                        ? (loginMethod === 'email' ? 'Sending Code...' : 'Validating...') 
-                        : (loginMethod === 'email' ? 'Send Code' : 'Continue')}
+                        ? (loginMethod === LOGIN_METHODS.EMAIL ? 'Sending Code...' : 'Validating...') 
+                        : (loginMethod === LOGIN_METHODS.EMAIL ? 'Send Code' : 'Continue')}
                     </Button>
                   </form>
                 )}
 
                 {/* Sign Up Form */}
-                {activeTab === 'signup' && (
-                  <form onSubmit={handleSignUp} className="space-y-4">
+                {activeTab === AUTH_TABS.SIGNUP && (
+                  <form onSubmit={handleSignUp} className={FORM_STYLES.CONTAINER}>
                     <Input
                       label="Full Name"
                       type="text"
@@ -502,10 +627,10 @@ const AuthPage = () => {
 
                 {/* Link Account Section */}
                 {showLinkAccount && (
-                  <div className="mt-6 pt-6 border-t border-border">
+                  <div className={FORM_STYLES.DIVIDER}>
                     <h3 className="text-lg font-semibold text-foreground mb-4">Link Your Health Record</h3>
                     
-                    <div className="space-y-4">
+                    <div className={FORM_STYLES.CONTAINER}>
                       <Input
                         label="Worker ID"
                         type="text"
@@ -553,8 +678,8 @@ const AuthPage = () => {
                 <p className="text-sm text-muted-foreground">
                   Don't have a health record yet?{' '}
                   <button
-                    onClick={() => navigate('/personal-health-record')}
-                    className="text-primary hover:underline"
+                    onClick={() => navigate(ROUTES.PERSONAL_HEALTH_RECORD)}
+                    className={BUTTON_STYLES.FOOTER_LINK}
                   >
                     Create one here
                   </button>

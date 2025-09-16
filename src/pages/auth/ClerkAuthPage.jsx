@@ -1,13 +1,52 @@
-import React, { useState, useEffect } from 'react';
+/**
+ * @fileoverview Clerk Authentication Page Component
+ * @description Handles Clerk-based authentication with account linking
+ * @author WorkerHelper Team
+ * @version 1.0.0
+ */
+
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { SignIn, SignUp, useUser } from '@clerk/clerk-react';
+
+// Context and Hooks
 import { useClerkAuth } from '../../contexts/ClerkAuthContext';
+
+// UI Components
 import Header from '../../components/ui/Header';
 import Button from '../../components/ui/Button';
 import Input from '../../components/ui/Input';
 import Icon from '../../components/AppIcon';
 
+// Constants and Utilities
+import {
+  AUTH_TABS,
+  ROUTES,
+  ERROR_MESSAGES,
+  SUCCESS_MESSAGES
+} from './constants';
+import {
+  LAYOUT_STYLES,
+  HEADER_STYLES,
+  CARD_STYLES,
+  TAB_STYLES,
+  MESSAGE_STYLES,
+  BUTTON_STYLES,
+  getTabClasses
+} from './styles';
+import {
+  validateLinkAccountForm,
+  hasValidationErrors
+} from './utils/validation';
+
+/**
+ * ClerkAuthPage Component
+ * 
+ * Provides Clerk-based authentication with worker account linking
+ * 
+ * @component
+ */
 const ClerkAuthPage = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -23,12 +62,22 @@ const ClerkAuthPage = () => {
     });
   }, [isSignedIn, user]);
   
-  const [activeTab, setActiveTab] = useState('signin');
+  /** Current active tab */
+  const [activeTab, setActiveTab] = useState(AUTH_TABS.SIGNIN);
+  
+  /** Show account linking section */
   const [showLinkAccount, setShowLinkAccount] = useState(false);
+  
+  /** Form submission state */
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  /** Validation errors */
   const [errors, setErrors] = useState({});
+  
+  /** Success/info messages */
   const [message, setMessage] = useState('');
   
+  /** Link account form data */
   const [linkForm, setLinkForm] = useState({
     workerId: '',
     phoneNumber: ''
@@ -136,27 +185,27 @@ const ClerkAuthPage = () => {
         <meta name="description" content="Sign in to your WorkerHelper account or create a new account to manage your health records." />
       </Helmet>
       
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-gradient-to-b from-background via-muted/30 to-background">
         <Header />
         
-        <main className="pt-20 pb-16">
+        <main className="pt-20 pb-20">
           <div className="container mx-auto px-4 lg:px-8">
             <div className="max-w-md mx-auto">
               
               {/* Page Header */}
-              <div className="text-center mb-8">
-                <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="text-center mb-10">
+                <div className="w-16 h-16 bg-gradient-to-br from-primary to-primary/70 rounded-2xl shadow-lg shadow-primary/20 ring-1 ring-primary/20 flex items-center justify-center mx-auto mb-5">
                   <Icon name="Shield" size={32} color="white" />
                 </div>
-                <h1 className="text-3xl font-bold text-foreground mb-2">Welcome to WorkerHelper</h1>
-                <p className="text-muted-foreground">
+                <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground mb-2">Welcome to WorkerHelper</h1>
+                <p className="text-sm md:text-base text-muted-foreground">
                   Secure access to your health records
                 </p>
               </div>
 
               {/* Show link account form if user is signed in but has no worker data */}
               {showLinkAccount && isSignedIn ? (
-                <div className="bg-card rounded-xl border border-border p-6">
+                <div className="bg-card/90 backdrop-blur-sm rounded-2xl border border-border/60 p-6 md:p-8 shadow-lg shadow-black/5">
                   <div className="text-center mb-6">
                     <Icon name="Link" size={48} className="text-primary mx-auto mb-4" />
                     <h2 className="text-xl font-bold text-foreground mb-2">
@@ -169,14 +218,14 @@ const ClerkAuthPage = () => {
 
                   {/* Messages */}
                   {message && (
-                    <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                      <p className="text-sm text-blue-800">{message}</p>
+                    <div className="mb-4 p-3 bg-blue-50/70 border border-blue-200 rounded-lg">
+                      <p className="text-sm text-blue-900">{message}</p>
                     </div>
                   )}
 
                   {errors.general && (
-                    <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-                      <p className="text-sm text-red-800">{errors.general}</p>
+                    <div className="mb-4 p-3 bg-red-50/70 border border-red-200 rounded-lg">
+                      <p className="text-sm text-red-900">{errors.general}</p>
                     </div>
                   )}
 
@@ -225,25 +274,25 @@ const ClerkAuthPage = () => {
                   </form>
                 </div>
               ) : (
-                <div className="bg-card rounded-xl border border-border p-6">
+                <div className="bg-card/90 backdrop-blur-sm rounded-2xl border border-border/60 p-6 md:p-8 shadow-lg shadow-black/5">
                   {/* Tabs */}
-                  <div className="flex bg-muted rounded-lg p-1 mb-6">
+                  <div className="flex bg-muted/60 rounded-xl p-1.5 mb-7">
                     <button
                       onClick={() => handleTabChange('signin')}
-                      className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
+                      className={`flex-1 py-2.5 px-4 rounded-lg text-sm font-medium transition-all duration-200 ${
                         activeTab === 'signin' 
-                          ? 'bg-background text-foreground shadow-sm' 
-                          : 'text-muted-foreground hover:text-foreground'
+                          ? 'bg-background text-foreground shadow-sm ring-1 ring-border/70' 
+                          : 'text-muted-foreground hover:text-foreground/90'
                       }`}
                     >
                       Sign In
                     </button>
                     <button
                       onClick={() => handleTabChange('signup')}
-                      className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
+                      className={`flex-1 py-2.5 px-4 rounded-lg text-sm font-medium transition-all duration-200 ${
                         activeTab === 'signup' 
-                          ? 'bg-background text-foreground shadow-sm' 
-                          : 'text-muted-foreground hover:text-foreground'
+                          ? 'bg-background text-foreground shadow-sm ring-1 ring-border/70' 
+                          : 'text-muted-foreground hover:text-foreground/90'
                       }`}
                     >
                       Sign Up
@@ -277,7 +326,7 @@ const ClerkAuthPage = () => {
                   Don't have a health record yet?{' '}
                   <button
                     onClick={() => navigate('/personal-health-record')}
-                    className="text-primary hover:underline"
+                    className="text-primary hover:text-primary/80 transition-colors"
                   >
                     Create one here
                   </button>
