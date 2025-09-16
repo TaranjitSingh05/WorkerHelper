@@ -32,6 +32,28 @@ export const generateWorkerHealthId = () => {
   return `WH-${timestamp}-${randomPart}`.toUpperCase();
 };
 
+// Helper function to generate consistent Worker Health ID from user ID
+export const generateConsistentWorkerHealthId = (userId) => {
+  if (!userId) {
+    // For anonymous users, generate random ID
+    return generateWorkerHealthId();
+  }
+  
+  // Create a hash-like ID from user ID for consistency
+  let hash = 0;
+  for (let i = 0; i < userId.length; i++) {
+    const char = userId.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // Convert to 32bit integer
+  }
+  
+  // Convert to positive number and pad with zeros
+  const hashStr = Math.abs(hash).toString().padStart(8, '0');
+  const userPrefix = userId.substring(0, 4).toUpperCase().replace(/[^A-Z0-9]/g, 'X');
+  
+  return `WH-${userPrefix}-${hashStr}`;
+};
+
 // Helper function to generate QR code data URL
 export const generateQRCodeDataURL = async (data) => {
   // QRCode.react component will handle the generation

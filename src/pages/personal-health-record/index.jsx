@@ -1,14 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
+import { useUser } from '@clerk/clerk-react';
+import { useClerkAuth } from '../../contexts/ClerkAuthContext';
 import Header from '../../components/ui/Header';
 import PersonalInfoForm from './components/PersonalInfoForm';
 import HealthRecordSuccess from './components/HealthRecordSuccess';
 import HealthRecordHeader from './components/HealthRecordHeader';
+import Button from '../../components/ui/Button';
+import Icon from '../../components/AppIcon';
 
 const PersonalHealthRecord = () => {
+  const { user, isSignedIn, isLoaded } = useUser();
+  const { workerData: existingWorkerData, loading } = useClerkAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [workerData, setWorkerData] = useState(null);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [showEditForm, setShowEditForm] = useState(false);
   const [currentLanguage, setCurrentLanguage] = useState('en');
 
   // Load language preference on mount
@@ -16,6 +23,19 @@ const PersonalHealthRecord = () => {
     const savedLanguage = localStorage.getItem('workerhelper-language') || 'en';
     setCurrentLanguage(savedLanguage);
   }, []);
+  
+  // Check if user already has data and show it
+  useEffect(() => {
+    if (isSignedIn && existingWorkerData && !showEditForm) {
+      // User already has data, show the success view with their data
+      setWorkerData({
+        ...existingWorkerData,
+        healthId: existingWorkerData.health_id,
+        qrCodeUrl: existingWorkerData.qr_code_data || `${window.location.origin}/worker/${existingWorkerData.health_id}`
+      });
+      setShowSuccess(true);
+    }
+  }, [isSignedIn, existingWorkerData, showEditForm]);
 
   const handleFormSubmit = async (formData) => {
     setIsSubmitting(true);
@@ -39,6 +59,21 @@ const PersonalHealthRecord = () => {
   const handleCreateNew = () => {
     setShowSuccess(false);
     setWorkerData(null);
+    setShowEditForm(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+  
+  const handleEditRecord = () => {
+    setShowEditForm(true);
+    setShowSuccess(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+  
+  const handleCancelEdit = () => {
+    setShowEditForm(false);
+    if (existingWorkerData) {
+      setShowSuccess(true);
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -77,16 +112,53 @@ const PersonalHealthRecord = () => {
             <HealthRecordHeader />
             
             <div className="max-w-4xl mx-auto">
-              {showSuccess ? (
-                <HealthRecordSuccess 
-                  workerData={workerData}
-                  onCreateNew={handleCreateNew}
-                />
+              {loading ? (
+                <div className="bg-card rounded-xl border border-border p-8 text-center">
+                  <Icon name="Loader" size={32} className="text-primary animate-spin mx-auto mb-4" />
+                  <p className="text-muted-foreground">Loading your health record...</p>
+                </div>
+              ) : showSuccess && !showEditForm ? (
+                <div className="space-y-6">
+                  {/* Edit button for existing users */}
+                  {isSignedIn && existingWorkerData && (
+                    <div className="text-center">
+                      <Button
+                        onClick={handleEditRecord}
+                        variant="outline"
+                        size="lg"
+                        iconName="Edit"
+                        iconPosition="left"
+                      >
+                        Edit Health Record
+                      </Button>
+                    </div>
+                  )}
+                  <HealthRecordSuccess 
+                    workerData={workerData}
+                    onCreateNew={handleCreateNew}
+                  />
+                </div>
               ) : (
-                <PersonalInfoForm 
-                  onSubmit={handleFormSubmit}
-                  isSubmitting={isSubmitting}
-                />
+                <div className="space-y-4">
+                  {/* Cancel edit button for existing users */}
+                  {isSignedIn && existingWorkerData && showEditForm && (
+                    <div className="text-center">
+                      <Button
+                        onClick={handleCancelEdit}
+                        variant="ghost"
+                        size="sm"
+                        iconName="ArrowLeft"
+                        iconPosition="left"
+                      >
+                        Back to Health Record
+                      </Button>
+                    </div>
+                  )}
+                  <PersonalInfoForm 
+                    onSubmit={handleFormSubmit}
+                    isSubmitting={isSubmitting}
+                  />
+                </div>
               )}
             </div>
           </div>

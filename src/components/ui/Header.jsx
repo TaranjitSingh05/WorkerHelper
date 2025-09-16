@@ -1,6 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useUser, SignOutButton } from '@clerk/clerk-react';
+import { useClerkAuth } from '../../contexts/ClerkAuthContext';
+import { isDoctor, getDashboardUrl, getUserDisplayName } from '../../utils/roles';
 import Icon from '../AppIcon';
+import Button from './Button';
+import UserAvatar from './UserAvatar';
 import HealthInfoDropdown from './HealthInfoDropdown';
 import MobileNavigationMenu from './MobileNavigationMenu';
 import LanguageSelector from './LanguageSelector';
@@ -9,23 +14,27 @@ const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [currentLanguage, setCurrentLanguage] = useState('en');
   const location = useLocation();
+  const navigate = useNavigate();
   const headerRef = useRef(null);
+  
+  const { user, isSignedIn } = useUser();
+  const { workerData } = useClerkAuth();
 
-  const navigationItems = [
+  // Define different navigation items based on authentication status
+  const publicNavigationItems = [
+    { label: 'Home', path: '/homepage', icon: 'Home' },
+    { label: 'About Us', path: '/about-us', icon: 'Info' }
+  ];
+
+  const authenticatedNavigationItems = [
     { label: 'Home', path: '/homepage', icon: 'Home' },
     { label: 'About Us', path: '/about-us', icon: 'Info' },
-    { 
-      label: 'Health Info', 
-      type: 'dropdown',
-      icon: 'Heart',
-      items: [
-        { label: 'Health Trends', path: '/health-trends', icon: 'TrendingUp' },
-        { label: 'Risk Assessment', path: '/predictive-risk-assessment', icon: 'Shield' }
-      ]
-    },
+    { label: 'Risk Assessment', path: '/predictive-risk-assessment', icon: 'Shield' },
     { label: 'Health Centers', path: '/health-centers-locator', icon: 'MapPin' },
     { label: 'Personal Info', path: '/personal-health-record', icon: 'User' }
   ];
+
+  const navigationItems = isSignedIn ? authenticatedNavigationItems : publicNavigationItems;
 
   const isActiveRoute = (path) => {
     return location?.pathname === path;
@@ -47,6 +56,15 @@ const Header = () => {
 
   const closeMobileMenu = () => {
     setIsMobileMenuOpen(false);
+  };
+
+  const handleAuthClick = () => {
+    navigate('/auth');
+  };
+
+  const handleDashboardClick = () => {
+    const dashboardUrl = getDashboardUrl(user);
+    navigate(dashboardUrl);
   };
 
   // Close mobile menu on route change
@@ -126,6 +144,70 @@ const Header = () => {
 
         {/* Right Section */}
         <div className="flex items-center space-x-3">
+          {/* Authentication Section - Desktop */}
+          {isSignedIn ? (
+            <div className="hidden md:flex items-center space-x-3">
+              {/* User Info */}
+              <div className="flex items-center space-x-2">
+                <UserAvatar 
+                  user={user} 
+                  workerData={workerData} 
+                  size="sm" 
+                />
+                <div className="flex flex-col">
+                  <span className="text-sm font-medium text-foreground">
+                    {getUserDisplayName(user)}
+                  </span>
+                  {workerData && !isDoctor(user) && (
+                    <span className="text-xs text-muted-foreground">
+                      {workerData.health_id}
+                    </span>
+                  )}
+                  {isDoctor(user) && (
+                    <span className="text-xs text-muted-foreground">
+                      Medical Professional
+                    </span>
+                  )}
+                </div>
+              </div>
+              
+              {/* Dashboard Button */}
+              <Button
+                onClick={handleDashboardClick}
+                variant="outline"
+                size="sm"
+                iconName="BarChart3"
+                iconPosition="left"
+              >
+                Dashboard
+              </Button>
+              
+              {/* Sign Out Button */}
+              <SignOutButton>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  iconName="LogOut"
+                  iconPosition="left"
+                >
+                  Sign Out
+                </Button>
+              </SignOutButton>
+            </div>
+          ) : (
+            <div className="hidden md:flex items-center space-x-3">
+              <Button
+                onClick={handleAuthClick}
+                variant="default"
+                size="sm"
+                iconName="LogIn"
+                iconPosition="left"
+              >
+                Sign In / Sign Up
+              </Button>
+            </div>
+          )}
+          
           {/* Language Selector - Desktop */}
           <div className="hidden md:block">
             <LanguageSelector
@@ -152,6 +234,11 @@ const Header = () => {
         currentLanguage={currentLanguage}
         onLanguageChange={handleLanguageChange}
         activeRoute={location?.pathname}
+        user={user}
+        isSignedIn={isSignedIn}
+        workerData={workerData}
+        onAuthClick={handleAuthClick}
+        onDashboardClick={handleDashboardClick}
       />
     </header>
   );

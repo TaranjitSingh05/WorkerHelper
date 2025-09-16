@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../../components/ui/Header';
 import HeroSection from './components/HeroSection';
+import UserGuideSection from './components/UserGuideSection';
 import ArticlesSection from './components/ArticlesSection';
-import CallToActionSection from './components/CallToActionSection';
 import Footer from './components/Footer';
 
 const Homepage = () => {
@@ -31,11 +31,11 @@ const Homepage = () => {
         {/* Hero Section */}
         <HeroSection currentLanguage={currentLanguage} />
         
+        {/* User Guide Section */}
+        <UserGuideSection />
+        
         {/* Articles Section */}
         <ArticlesSection currentLanguage={currentLanguage} />
-        
-        {/* Call to Action Section */}
-        <CallToActionSection currentLanguage={currentLanguage} />
       </main>
       
       {/* Footer */}

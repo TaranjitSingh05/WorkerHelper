@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { SignOutButton } from '@clerk/clerk-react';
 import Icon from '../AppIcon';
+import Button from './Button';
+import UserAvatar from './UserAvatar';
 import LanguageSelector from './LanguageSelector';
 
 const MobileNavigationMenu = ({ 
@@ -9,7 +12,12 @@ const MobileNavigationMenu = ({
   navigationItems, 
   currentLanguage, 
   onLanguageChange, 
-  activeRoute 
+  activeRoute,
+  user,
+  isSignedIn,
+  workerData,
+  onAuthClick,
+  onDashboardClick
 }) => {
   const [expandedDropdown, setExpandedDropdown] = useState(null);
 
@@ -42,6 +50,70 @@ const MobileNavigationMenu = ({
       {/* Mobile Menu */}
       <div className="fixed top-15 left-0 right-0 bottom-0 bg-card border-t border-border z-1020 md:hidden overflow-y-auto">
         <div className="p-5">
+          {/* User Profile Section */}
+          {isSignedIn ? (
+            <div className="mb-6 pb-4 border-b border-border">
+              <div className="flex items-center space-x-3 mb-4">
+                <UserAvatar 
+                  user={user} 
+                  workerData={workerData} 
+                  size="md" 
+                />
+                <div className="flex-1 min-w-0">
+                  <p className="font-medium text-foreground truncate">
+                    {workerData?.full_name || user?.firstName || user?.emailAddresses?.[0]?.emailAddress?.split('@')[0]}
+                  </p>
+                  {workerData && (
+                    <p className="text-xs text-muted-foreground font-mono">
+                      {workerData.health_id}
+                    </p>
+                  )}
+                  {user?.emailAddresses?.[0]?.emailAddress && (
+                    <p className="text-xs text-muted-foreground truncate">
+                      {user.emailAddresses[0].emailAddress}
+                    </p>
+                  )}
+                </div>
+              </div>
+              <div className="flex space-x-2">
+                <Button
+                  onClick={() => { onDashboardClick(); onClose(); }}
+                  variant="outline"
+                  size="sm"
+                  iconName="BarChart3"
+                  iconPosition="left"
+                  fullWidth
+                >
+                  Dashboard
+                </Button>
+                <SignOutButton>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    iconName="LogOut"
+                    iconPosition="left"
+                    fullWidth
+                  >
+                    Sign Out
+                  </Button>
+                </SignOutButton>
+              </div>
+            </div>
+          ) : (
+            <div className="mb-6 pb-4 border-b border-border">
+              <Button
+                onClick={() => { onAuthClick(); onClose(); }}
+                variant="default"
+                size="md"
+                iconName="LogIn"
+                iconPosition="left"
+                fullWidth
+              >
+                Sign In / Sign Up
+              </Button>
+            </div>
+          )}
+          
           {/* Language Selector */}
           <div className="mb-6 pb-4 border-b border-border">
             <div className="text-sm font-medium text-muted-foreground mb-3">Language</div>

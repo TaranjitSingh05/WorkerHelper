@@ -90,7 +90,7 @@ const HeroSection = ({ currentLanguage }) => {
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4">
-              <Link to="/personal-health-record">
+              <Link to="/auth?tab=signup">
                 <Button
                   variant="default"
                   size="lg"
